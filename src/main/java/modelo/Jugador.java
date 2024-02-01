@@ -65,7 +65,7 @@ public class Jugador {
 
 	public int getVictories() {
 		return victories;
-	}1
+	}
 
 	public void setVictories(int victories) {
 		this.victories = victories;
