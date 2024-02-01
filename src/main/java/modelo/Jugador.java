@@ -1,4 +1,3 @@
-
 package modelo;
 
 import java.util.List;
@@ -16,86 +15,86 @@ import javax.persistence.Table;
 @Table(name = "JUGADOR")
 public class Jugador {
 
-	private static final String[] COLORES = { "ROJO", "AMARILLO", "AZUL", "VERDE" };
+    public static final String[] COLORES = {"ROJO", "AMARILLO", "AZUL", "VERDE"};
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "idJugador")
-	private int id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "idJugador")
+    private int id;
 
-	@Column(name = "NOM")
-	private String nom;
+    @Column(name = "NOM")
+    private String nom;
 
-	@Column(name = "Color")
-	private String color;
+    @Column(name = "Color")
+    private String color;
 
-	@Column(name = "Victories")
-	private int victories;
+    @Column(name = "Victories")
+    private int victories;
 
-	@OneToMany(mappedBy = "jugador", cascade = CascadeType.ALL)
-	private List<Fitxes> fitxes;
+    @OneToMany(mappedBy = "jugador", cascade = CascadeType.ALL)
+    private List<Fitxes> fitxes;
 
-	@OneToMany(mappedBy = "guanyador", cascade = CascadeType.ALL)
-	private List<Partides> partidesGuanyades;
+    @OneToMany(mappedBy = "guanyador", cascade = CascadeType.ALL)
+    private List<Partides> partidesGuanyades;
 
-	public Jugador(int id, String nom, String color, int victories) {
-		super();
-		this.id = id;
-		this.nom = nom;
-		this.color = color;
-		this.victories = victories;
-	}
+    public Jugador(int id, String nom, String color, int victories) {
+        super();
+        this.id = id;
+        this.nom = nom;
+        this.color = color;
+        this.victories = victories;
+    }
 
-	public int getId() {
-		return id;
-	}
+    public int getId() {
+        return id;
+    }
 
-	public void setId(int id) {
-		this.id = id;
-	}
+    public void setId(int id) {
+        this.id = id;
+    }
 
-	public String getNom() {
-		return nom;
-	}
+    public String getNom() {
+        return nom;
+    }
 
-	public void setNom(String nom) {
-		this.nom = nom;
-	}
+    public void setNom(String nom) {
+        this.nom = nom;
+    }
 
-	public String getColor() {
-		return color;
-	}
+    public String getColor() {
+        return color;
+    }
 
-	public void setColor(String color) {
-		for (String c : COLORES) {
-			if (color == c) {
-				this.color = color;
-			}
-		}
-	}
+    public void setColor(String color) {
+        for (String c : COLORES) {
+            if (color == c) {
+                this.color = color;
+            }
+        }
+    }
 
-	public int getVictories() {
-		return victories;
-	}
+    public int getVictories() {
+        return victories;
+    }
 
-	public void setVictories(int victories) {
-		this.victories = victories;
-	}
+    public void setVictories(int victories) {
+        this.victories = victories;
+    }
 
-	public List<Fitxes> getFitxes() {
-		return fitxes;
-	}
+    public List<Fitxes> getFitxes() {
+        return fitxes;
+    }
 
-	public void setFitxes(List<Fitxes> fitxes) {
-		this.fitxes = fitxes;
-	}
+    public void setFitxes(List<Fitxes> fitxes) {
+        this.fitxes = fitxes;
+    }
 
-	public List<Partides> getPartidesGuanyades() {
-		return partidesGuanyades;
-	}
+    public List<Partides> getPartidesGuanyades() {
+        return partidesGuanyades;
+    }
 
-	public void setPartidesGuanyades(List<Partides> partidesGuanyades) {
-		this.partidesGuanyades = partidesGuanyades;
-	}
+    public void setPartidesGuanyades(List<Partides> partidesGuanyades) {
+        this.partidesGuanyades = partidesGuanyades;
+    }
 
 }
