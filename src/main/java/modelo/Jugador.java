@@ -12,18 +12,15 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-
-
 @Entity
 @Table(name = "JUGADOR")
 public class Jugador {
 
-	
-	private static final String[] COLORES = {"ROJO", "AMARILLO", "AZUL","VERDE"};
-	
+	private static final String[] COLORES = { "ROJO", "AMARILLO", "AZUL", "VERDE" };
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "idVehicle")
+	@Column(name = "idJugador")
 	private int id;
 
 	@Column(name = "NOM")
@@ -36,11 +33,11 @@ public class Jugador {
 	private int victories;
 
 	@OneToMany(mappedBy = "jugador", cascade = CascadeType.ALL)
-    private List<Fitxes> fitxes;
+	private List<Fitxes> fitxes;
 
-    @OneToMany(mappedBy = "guanyador", cascade = CascadeType.ALL)
-    private List<Partides> partidesGuanyades;
-    
+	@OneToMany(mappedBy = "guanyador", cascade = CascadeType.ALL)
+	private List<Partides> partidesGuanyades;
+
 	public Jugador(int id, String nom, String color, int victories) {
 		super();
 		this.id = id;
@@ -70,7 +67,11 @@ public class Jugador {
 	}
 
 	public void setColor(String color) {
-		this.color = color;
+		for (String c : COLORES) {
+			if (color == c) {
+				this.color = color;
+			}
+		}
 	}
 
 	public int getVictories() {
@@ -80,7 +81,21 @@ public class Jugador {
 	public void setVictories(int victories) {
 		this.victories = victories;
 	}
-	
-	
+
+	public List<Fitxes> getFitxes() {
+		return fitxes;
+	}
+
+	public void setFitxes(List<Fitxes> fitxes) {
+		this.fitxes = fitxes;
+	}
+
+	public List<Partides> getPartidesGuanyades() {
+		return partidesGuanyades;
+	}
+
+	public void setPartidesGuanyades(List<Partides> partidesGuanyades) {
+		this.partidesGuanyades = partidesGuanyades;
+	}
 
 }
