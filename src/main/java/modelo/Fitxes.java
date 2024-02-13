@@ -28,6 +28,13 @@ public class Fitxes {
 		this.partida = partida;
 	}
 
+    public Fitxes(int posicio, boolean activa) {
+        this.posicio = posicio;
+        this.activa = activa;
+    }
+        
+        
+
 	public int getPosicio() {
 		return posicio;
 	}
@@ -59,6 +66,11 @@ public class Fitxes {
 	public void setPartida(Partides partida) {
 		this.partida = partida;
 	}
+
+    @Override
+    public String toString() {
+        return "Fitxes{" + "posicio=" + posicio + ", activa=" + activa + ", jugador=" + jugador + ", partida=" + partida + '}';
+    }
 	
 	
 	

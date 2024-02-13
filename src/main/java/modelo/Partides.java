@@ -37,6 +37,13 @@ public class Partides {
 		this.enCurso = enCurso;
 	}
 
+	public Partides(int idPartida, Date fechaInicio) {
+		super();
+		this.idPartida = idPartida;
+		this.fechaInicio = fechaInicio;
+		this.enCurso = true;
+	}
+	
 	public int getIdPartida() {
 		return idPartida;
 	}

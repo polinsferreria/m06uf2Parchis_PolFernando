@@ -1,5 +1,6 @@
 package modelo;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -32,10 +33,10 @@ public class Jugador {
     private int victories;
 
     @OneToMany(mappedBy = "jugador", cascade = CascadeType.ALL)
-    private List<Fitxes> fitxes;
+    private ArrayList<Fitxes> fitxes;
 
     @OneToMany(mappedBy = "guanyador", cascade = CascadeType.ALL)
-    private List<Partides> partidesGuanyades;
+    private ArrayList<Partides> partidesGuanyades;
 
     public Jugador(int id, String nom, String color, int victories) {
         super();
@@ -81,19 +82,19 @@ public class Jugador {
         this.victories = victories;
     }
 
-    public List<Fitxes> getFitxes() {
+    public ArrayList<Fitxes> getFitxes() {
         return fitxes;
     }
 
-    public void setFitxes(List<Fitxes> fitxes) {
+    public void setFitxes(ArrayList<Fitxes> fitxes) {
         this.fitxes = fitxes;
     }
 
-    public List<Partides> getPartidesGuanyades() {
+    public ArrayList<Partides> getPartidesGuanyades() {
         return partidesGuanyades;
     }
 
-    public void setPartidesGuanyades(List<Partides> partidesGuanyades) {
+    public void setPartidesGuanyades(ArrayList<Partides> partidesGuanyades) {
         this.partidesGuanyades = partidesGuanyades;
     }
 

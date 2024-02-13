@@ -37,21 +37,21 @@ public class Dado {
 
 		resultado.add(dado2);
 
-		if (dado1 == dado2) {
-
-			if (tiradas == 4) {
-
-				eliminado = true;
-
-			} else {
-
-				tiradas++;
-
-				tirarDado();
-
-			}
-
-		}
+//		if (dado1 == dado2) {
+//
+//			if (tiradas == 4) {
+//
+//				eliminado = true;
+//
+//			} else {
+//
+//				tiradas++;
+//
+//				tirarDado();
+//
+//			}
+//
+//		}
 
 	}
 	
