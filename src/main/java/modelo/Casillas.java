@@ -108,5 +108,17 @@ public class Casillas {
 
         return tablero;
     }
+    public static Casillas[] casaTablero() {
+        Casillas[] tablero = new Casillas[68];
+
+        for (int i = 1; i <= 8; i++) {
+
+            String tipo = STR_TIPO_SEGURA;
+            Casillas aux = new Casillas(i, tipo, i);
+            tablero[i - 1] = aux;
+        }
+
+        return tablero;
+    }
     
 }

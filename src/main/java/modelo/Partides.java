@@ -1,5 +1,6 @@
 package modelo;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.persistence.*;
@@ -14,12 +15,10 @@ public class Partides {
 	private int idPartida;
 
 	@Column(name = "FechaInicio")
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date fechaInicio;
+	private String fechaInicio;
 
 	@Column(name = "FechaFin")
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date fechaFin;
+	private String fechaFin;
 
 	@ManyToOne
 	@JoinColumn(name = "IdGanador")
@@ -28,7 +27,7 @@ public class Partides {
 	@Column(name = "EnCurso")
 	private boolean enCurso;
 
-	public Partides(int idPartida, Date fechaInicio, Date fechaFin, Jugador ganador, boolean enCurso) {
+	public Partides(int idPartida, String fechaInicio, String fechaFin, Jugador ganador, boolean enCurso) {
 		super();
 		this.idPartida = idPartida;
 		this.fechaInicio = fechaInicio;
@@ -37,7 +36,7 @@ public class Partides {
 		this.enCurso = enCurso;
 	}
 
-	public Partides(int idPartida, Date fechaInicio) {
+	public Partides(int idPartida, String fechaInicio) {
 		super();
 		this.idPartida = idPartida;
 		this.fechaInicio = fechaInicio;
@@ -52,19 +51,19 @@ public class Partides {
 		this.idPartida = idPartida;
 	}
 
-	public Date getFechaInicio() {
+	public String getFechaInicio() {
 		return fechaInicio;
 	}
 
-	public void setFechaInicio(Date fechaInicio) {
+	public void setFechaInicio(String fechaInicio) {
 		this.fechaInicio = fechaInicio;
 	}
 
-	public Date getFechaFin() {
+	public String getFechaFin() {
 		return fechaFin;
 	}
 
-	public void setFechaFin(Date fechaFin) {
+	public void setFechaFin(String fechaFin) {
 		this.fechaFin = fechaFin;
 	}
 
@@ -82,6 +81,18 @@ public class Partides {
 
 	public void setEnCurso(boolean enCurso) {
 		this.enCurso = enCurso;
+	}
+	
+	public static String DateAString(Date fecha) {
+		SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+		 // Convertir Date a String
+        String fechaString = formato.format(fecha);
+        return fechaString;
+	}
+	@Override
+	public String toString() {
+		return "Partides [idPartida=" + idPartida + ", fechaInicio=" + fechaInicio + ", fechaFin=" + fechaFin
+				+ ", ganador=" + ganador + ", enCurso=" + enCurso + "]";
 	}
 	
 	
