@@ -18,6 +18,9 @@ public class Casillas {
     public static final int[] CASILLAS_SEGURAS = {12, 17, 22, 29, 34, 39, 46, 51, 56, 63, 68};
 
     public static final int[] CASILLAS_SALIDA = {5, 22, 39, 56};
+    
+    public static final int[] CASILLAS_CASA = {100,200,300,400};
+    
     private int idCasilla;
 
     private String tipoCasilla;

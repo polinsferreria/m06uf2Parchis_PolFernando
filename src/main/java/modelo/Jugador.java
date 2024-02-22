@@ -33,7 +33,7 @@ public class Jugador implements Serializable {
 
 	@OneToMany(mappedBy = "jugador", cascade = CascadeType.ALL)
 	private ArrayList<Fitxes> fitxes;
-
+	
 	@OneToMany(mappedBy = "guanyador", cascade = CascadeType.ALL)
 	private ArrayList<Partides> partidesGuanyades;
 
@@ -43,7 +43,7 @@ public class Jugador implements Serializable {
 		this.nom = nom;
 		this.color = color;
 		this.victories = victories;
-
+		
 		inicializarFitxes();
 	}
 
@@ -69,10 +69,11 @@ public class Jugador implements Serializable {
 
 	public void setColor(String color) {
 		for (String c : COLORES) {
-			if (color == c) {
-				this.color = color;
-			}
-		}
+	        if (color.equals(c)) {
+	            this.color = color;
+	            return;  // Agregamos un return para salir del bucle si encontramos el color
+	        }
+	    }
 	}
 
 	public int getVictories() {
@@ -111,6 +112,14 @@ public class Jugador implements Serializable {
 		}
 		jugador.setFitxes(fitxes);
 	}
+	public int getColorInt() {
+        for (int i = 0; i < COLORES.length; i++) {
+            if (COLORES[i].equals(this.color)) {
+                return i;
+            }
+        }
+        return -1;
+    }
 
 	private final void inicializarFitxes() {
 

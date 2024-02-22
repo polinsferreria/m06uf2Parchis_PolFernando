@@ -77,7 +77,7 @@ public class Fitxes implements Serializable {
         this.partida = partida;
     }
 
-    public int getID() {
+    public int getId() {
         return id;
     }
 

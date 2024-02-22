@@ -36,10 +36,10 @@ public class Partides {
 		this.enCurso = enCurso;
 	}
 
-	public Partides(int idPartida, String fechaInicio) {
+	public Partides(int idPartida) {
 		super();
 		this.idPartida = idPartida;
-		this.fechaInicio = fechaInicio;
+		this.fechaInicio = DateAString(new Date());
 		this.enCurso = true;
 	}
 	
@@ -81,6 +81,10 @@ public class Partides {
 
 	public void setEnCurso(boolean enCurso) {
 		this.enCurso = enCurso;
+	}
+	public void finalizarPartida() {
+	    this.fechaFin = DateAString(new Date());
+	    this.enCurso = false;
 	}
 	
 	public static String DateAString(Date fecha) {

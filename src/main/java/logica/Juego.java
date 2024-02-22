@@ -6,8 +6,6 @@ package logica;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
-import java.util.Map;
 import java.util.Scanner;
 
 import modelo.Casillas;
@@ -43,7 +41,7 @@ public class Juego {
 
 		do {
 			for (int i = 0; i < jugadoresOrdenados.length - 1; i++) {
-				if (jugadoresOrdenados[i]!= null) {
+				if (jugadoresOrdenados[i] != null) {
 					tirarDado(jugadoresOrdenados[i], 0);
 				}
 
@@ -87,7 +85,7 @@ public class Juego {
 	private void inicializarfitxasArry(Jugador[] jugadoresOrdenados) {// hacemos un arraylist con todas las fichas de
 		// los jugadores
 		for (int i = 0; i <= jugadoresOrdenados.length - 1; i++) {
-			for (int j = 0; j < jugadoresOrdenados[i].getFitxes().size() - 1; j++) {
+			for (int j = 0; j < jugadoresOrdenados[i].getFitxes().size(); j++) {
 				if (jugadoresOrdenados[i].getFitxes().get(j).getPartida().getIdPartida() == partida.getIdPartida()) {
 					fitxesPartida[i] = jugadoresOrdenados[i].getFitxes().get(j);
 				}
@@ -124,7 +122,7 @@ public class Juego {
 
 			System.out.println("Lastima perdiste una ficha... ");
 
-			elegirFichaEliminar(jugador);
+			eliminarFicha(elegirFicha(jugador, "Eliminar"));
 			return;
 		}
 
@@ -178,27 +176,83 @@ public class Juego {
 	}
 
 	public void moverFitxa(Jugador jugador, int numAvances, Casillas[] tablero) {
+
 		Fitxes f = elegirFicha(jugador, "mover");
 		Fitxes f2 = null;
-		boolean enTableroCasa = f.getPosicio() < 68;
-		desbloquearCasilla(f, tablero);
-		for (int i = 1; i <= numAvances; i++) {
-			if (enTableroCasa) {// dentro del tablero casa
 
+		desbloquearCasilla(f, tablero);
+
+		boolean enTableroCasa = f.getPosicio() < 68;
+		boolean retroceso = false;
+
+		int posTableroCasa = Casillas.CASILLAS_CASA[jugador.getColorInt()];
+		int avances = 1;
+
+		for (int i = 1; i <= numAvances; i++) {
+
+			if (retroceso) {
+
+				avances = -1;
+			}
+
+			if (enTableroCasa) {
+
+				if (f.getPosicio() == (posTableroCasa + 8)) {
+					retroceso = true;
+				}
+
+				if (f.getPosicio() == posTableroCasa) {
+
+					if (tablero[getCasillaEntrada(jugador)].getBloqueado() == Casillas.KEY_BLOQUEADO) {
+
+						break;
+
+					} else {
+
+						f.setPosicio(getCasillaEntrada(jugador));
+						enTableroCasa = false;
+
+					}
+
+					f.setPosicio(f.getPosicio() + avances);
+
+				} else {
+
+					bloqueoCasa(jugador, f.getPosicio() + avances);
+
+					f.setPosicio(f.getPosicio() + avances);
+
+				}
+
+				continue;
 			}
 
 			if (tablero[(f.getPosicio() + 1) % 67 + 1].getBloqueado() == Casillas.KEY_BLOQUEADO) {
 				break;
 			} else {
 				if (tablero[(f.getPosicio() + 1) % 67 + 1].getPosicion() == getCasillaEntrada(jugador)) {
-					// llegada de tablero casa
-
+					enTableroCasa = true;
+					f.setPosicio(posTableroCasa);
 				}
-				f.setPosicio(f.getPosicio() + 1);
+
+				f.setPosicio(f.getPosicio() + avances);
 			}
 
 		}
+
+		if (enTableroCasa) {
+
+			if (f.getPosicio() == (posTableroCasa + 8)) {
+
+				f.setActiva(false);
+
+			}
+
+			return;
+		}
+
 		f2 = hayficha(f);
+
 		if (casillaSegura(f, tablero)) {// casilla segura
 
 			if (f2 != null) {// casilla segura con una ficha = a bloqueo
@@ -206,18 +260,20 @@ public class Juego {
 
 			}
 			return;
+
 		} else {
 			if (f2 != null) {
 				if (hayfichaColor(f, f2)) {
 					tablero[f.getPosicio()].setBloqueado(Casillas.KEY_BLOQUEADO);
 				} else {// eliminar f2
-					f2.setActiva(false);
-
+					eliminarFicha(f2);
 				}
 
 			}
-		} // si hay una ficha de un mismo color en una casilla no salvens pues se bloquea
-			// tambien; asi q else{hayFichaColor()}
+		}
+
+		// si hay una ficha de un mismo color en una casilla no salvens pues se bloquea
+		// tambien; asi q else{hayFichaColor()}
 
 	}
 
@@ -228,11 +284,31 @@ public class Juego {
 	private Fitxes hayficha(Fitxes f) {
 
 		for (int i = 0; i < fitxesPartida.length; i++) {
-			if (f.getPosicio() == fitxesPartida[i].getPosicio() && f.getID() != fitxesPartida[i].getID()) {
+			if (f.getPosicio() == fitxesPartida[i].getPosicio() && f.getId() != fitxesPartida[i].getId()) {
 				return fitxesPartida[i];
 			}
 		}
 		return null;
+	}
+
+	private boolean bloqueoCasa(Jugador j, int pos) {
+
+		int cont = 0;
+
+		for (Fitxes fitxes : fitxesPartida) {
+
+			if (fitxes.getJugador().equals(j) && fitxes.getPosicio() == pos) {
+				cont++;
+
+				if (cont == 2) {
+					return true;
+				}
+			}
+
+		}
+
+		return false;
+
 	}
 
 	private boolean casillaSegura(Fitxes f, Casillas[] tablero) {
@@ -273,14 +349,13 @@ public class Juego {
 	}
 
 	private Fitxes elegirFicha(Jugador jugador, String accion) {
-
 		String fichasActivas = "";
 		int contador = 0;
 
 		ArrayList<Fitxes> fitxes = jugador.getFitxes();
 
 		for (Fitxes ficha : fitxes) {
-			if (ficha.isActiva()) {
+			if (ficha.isActiva() && ficha.getPosicio() == 0) {
 				contador++;
 				fichasActivas += contador + " [" + ficha.getPosicio() + "] ";
 			}
@@ -290,40 +365,42 @@ public class Juego {
 
 		if (contador == 0) {
 			System.out.println("No hay fichas activas para " + accion + ".");
-			return null; // No hay fichas activas, salir del m�todo
+			return null; // No hay fichas activas, salir del m?todo
 		}
 
 		int opcion;
 		do {
-			System.out.print("Seleccione el número de la ficha que desea" + accion + ": ");
+			System.out.print("Seleccione el nÃºmero de la ficha que desea" + accion + ": ");
 			if (sc.hasNextInt()) {
 				opcion = sc.nextInt();
 				if (opcion < 1 || opcion > contador) {
-					System.err.println("Error: Seleccione un número válido.");
+					System.err.println("Error: Seleccione un nÃºmero vÃ¡lido.");
 				} else {
-					break; // Salir del bucle si la entrada es v�lida
+
+					break; // Salir del bucle si la entrada es v?lida
 				}
 			} else {
-				System.err.println("Error: Ingrese un n�mero entero.");
+				System.err.println("Error: Ingrese un n?mero entero.");
 				sc.next(); // Limpiar el buffer de entrada
 			}
 		} while (true);
 
 		int fichaSeleccionada = 0;
 		for (Fitxes ficha : fitxes) {
-			if (ficha.isActiva()) {
+			if (ficha.isActiva() && ficha.getPosicio() == 0) {
 				fichaSeleccionada++;
 				if (fichaSeleccionada == opcion) {
-					return ficha; // Salir del m�todo despu�s de eliminar la ficha
+					return ficha; // Salir del m?todo despu?s de eliminar la ficha
 				}
 			}
 		}
+
 		return null;
 	}
 
-	public void elegirFichaEliminar(Jugador jugador) {
-
-		elegirFicha(jugador, "eliminar").setActiva(false);
-		System.out.println("Ficha eliminada con �xito.");
+	public void eliminarFicha(Fitxes fitxe) {
+		fitxe.setActiva(false);
+		fitxe.setPosicio(0);
+		System.out.println("Ficha eliminada con ?xito.");
 	}
 }
