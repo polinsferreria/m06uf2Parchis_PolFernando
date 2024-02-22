@@ -40,7 +40,7 @@ public class Main {
     		jugaores4.add(jugadores.get(i));
     		if(jugaores4.size() == 4) {
     			
-    			new Juego(new Partides(cont),jugaores4);
+    			new Juego(new Partides(),jugaores4);
     			
     			cont++;
     			jugaores4 = new ArrayList<Jugador>();
