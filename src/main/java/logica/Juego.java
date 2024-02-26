@@ -141,6 +141,11 @@ public class Juego {
 //metodo de fitxas de cada jugador al array fitxesPartida
     public boolean Sacarficha(Jugador jugador) {
 
+        if (tablero[getCasillaEntrada(jugador)].getBloqueado() == Casillas.KEY_BLOQUEADO) {
+            System.out.println("La casilla de salida esta bloqueado.");
+            return false;
+        }
+
         System.out.println("Quieres sacar una ficha? [Si / No]");
 
         do {
@@ -163,9 +168,9 @@ public class Juego {
             System.out.println("Error, forato no adecuado");
         } while (true);
     }
-    
-    private int getCasillaSalida(Jugador jugador) {   
-       return Casillas.CASILLAS_SALIDA[jugador.getColorInt()];
+
+    private int getCasillaSalida(Jugador jugador) {
+        return Casillas.CASILLAS_SALIDA[jugador.getColorInt()];
     }
 
     public int getCasillaEntrada(Jugador jugador) {
@@ -180,11 +185,12 @@ public class Juego {
         // System.out.println(f);
         if (f != null) {
 
-            System.out.println("Ficha no es nulla " + f.getPosicio());
-            desbloquearCasilla(f, tablero);
-
             boolean enTableroCasa = f.getPosicio() > 68;
             boolean retroceso = false;
+
+            if (!enTableroCasa) {
+                desbloquearCasilla(f, tablero);
+            }
 
             int posTableroCasa = Casillas.CASILLAS_CASA[jugador.getColorInt()];
             int avances = 1;
@@ -253,6 +259,8 @@ public class Juego {
             }
 
             f2 = hayficha(f);
+
+            f.setPosicio(f.getPosicio() % 67 + 1);
 
             if (casillaSegura(f, tablero)) {// casilla segura
 
@@ -395,7 +403,7 @@ public class Juego {
 
         int fichaSeleccionada = 0;
         for (Fitxes ficha : fitxes) {
-            if (ficha.isActiva() && ficha.getPosicio() == 0) {
+            if (ficha.isActiva() || ficha.getPosicio() != 0) {
                 fichaSeleccionada++;
                 if (fichaSeleccionada == opcion) {
                     return ficha; // Salir del m?todo despu?s de eliminar la ficha
