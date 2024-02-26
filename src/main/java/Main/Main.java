@@ -4,6 +4,7 @@ import java.util.Date;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import logica.Juego;
+import modelo.Casillas;
 import modelo.Fitxes;
 import modelo.Jugador;
 import modelo.Partides;
@@ -18,6 +19,8 @@ public class Main {
         Jugador a2 = new Jugador(2,"jaun2",Jugador.COLORES[1],2);
         Jugador a3 = new Jugador(3,"jaun3",Jugador.COLORES[2],2);
         Jugador a4 = new Jugador(4,"jaun4",Jugador.COLORES[3],2);
+        
+        
         
         Jugador b1 = new Jugador(5,"jaun5",Jugador.COLORES[0],2);
         Jugador b2 = new Jugador(6,"jaun6",Jugador.COLORES[1],2);

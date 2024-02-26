@@ -54,6 +54,7 @@ public class Juego {
 
         // Lanzar los dados para cada jugador y almacenar los resultados
         for (Jugador jugador : jugadores) {
+            System.out.println(getCasillaSalida(jugador));
             System.out.println("El jugador " + jugador.getNom() + " tira los dados...");
             Dado dado = new Dado();
             ArrayList<Integer> res = dado.getResultado();
@@ -93,7 +94,7 @@ public class Juego {
                     System.out.print(fitxesPartida[i].getPosicio() + " fd " + fitxesPartida[i].getId() + " lol " + fitxesPartida[i].isActiva());
                     cont++;
                 }
-            }          
+            }
         }
         System.out.println(fitxesPartida[1] == null);
     }
@@ -153,29 +154,18 @@ public class Juego {
                         fitxa.setActiva(true);
                         System.out.println(fitxa.getId() + " " + fitxa.getJugador().getNom() + " " + fitxa.isActiva());
                         return true;
-
                     }
                 }
 
             } else if (res.equals("No")) {
-
                 return false;
             }
-
             System.out.println("Error, forato no adecuado");
-
         } while (true);
-
     }
-
-    private int getCasillaSalida(Jugador jugador) {
-        for (int i = 0; i < Casillas.CASILLAS_SALIDA.length; i++) {
-            if (tablero[Casillas.CASILLAS_SALIDA[i]].getTipoCasilla().endsWith(jugador.getColor())) {
-                return Casillas.CASILLAS_SALIDA[i];
-
-            }
-        }
-        return 0;
+    
+    private int getCasillaSalida(Jugador jugador) {   
+       return Casillas.CASILLAS_SALIDA[jugador.getColorInt()];
     }
 
     public int getCasillaEntrada(Jugador jugador) {
@@ -185,10 +175,12 @@ public class Juego {
     }
 
     public void moverFitxa(Jugador jugador, int numAvances, Casillas[] tablero) {
-
         Fitxes f = elegirFicha(jugador, "mover");
         Fitxes f2 = null;
+        // System.out.println(f);
         if (f != null) {
+
+            System.out.println("Ficha no es nulla " + f.getPosicio());
             desbloquearCasilla(f, tablero);
 
             boolean enTableroCasa = f.getPosicio() > 68;
@@ -364,9 +356,14 @@ public class Juego {
         ArrayList<Fitxes> fitxes = jugador.getFitxes();
 
         for (Fitxes ficha : fitxes) {
-            if (ficha.isActiva() && ficha.getPosicio() == 0) {
+            if (ficha.isActiva() || ficha.getPosicio() != 0) {
                 contador++;
-                fichasActivas += contador + " [" + ficha.getPosicio() + "] ";
+                if (ficha.getPosicio() == 0) {
+                    fichasActivas += contador + " [" + getCasillaSalida(ficha.getJugador()) + "] ";
+                } else {
+                    fichasActivas += contador + " [" + ficha.getPosicio() + "] ";
+                }
+
             }
         }
 
