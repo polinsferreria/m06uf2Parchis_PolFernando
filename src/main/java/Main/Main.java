@@ -33,6 +33,7 @@ public class Main {
         jugadores.add(b2);
         jugadores.add(b3);
         jugadores.add(b4);
+        
         /*Partides p1 = new Partides(1,);*/
         ArrayList<Jugador> jugaores4 = new ArrayList<Jugador>();
     	for (int i = 0; i < jugadores.size(); i++) {
@@ -40,9 +41,8 @@ public class Main {
     		jugaores4.add(jugadores.get(i));
     		if(jugaores4.size() == 4) {
     			
-    			new Juego(new Partides(cont),jugaores4);
+    			new Juego(new Partides(),jugaores4);
     			
-    			cont++;
     			jugaores4 = new ArrayList<Jugador>();
     		}
 		}

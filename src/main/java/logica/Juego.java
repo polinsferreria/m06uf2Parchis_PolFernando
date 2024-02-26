@@ -40,11 +40,10 @@ public class Juego {
 	private void gestionarTurnos(Jugador[] jugadoresOrdenados) {
 
 		do {
-			for (int i = 0; i < jugadoresOrdenados.length - 1; i++) {
+			for (int i = 0; i < jugadoresOrdenados.length; i++) {
 				if (jugadoresOrdenados[i] != null) {
 					tirarDado(jugadoresOrdenados[i], 0);
 				}
-
 			}
 		} while (partida.isEnCurso());
 	}
@@ -83,20 +82,28 @@ public class Juego {
 	}
 
 	private void inicializarfitxasArry(Jugador[] jugadoresOrdenados) {// hacemos un arraylist con todas las fichas de
+		fitxesPartida = new Fitxes[16];
+		int cont = 0;
 		// los jugadores
 		for (int i = 0; i <= jugadoresOrdenados.length - 1; i++) {
 			for (int j = 0; j < jugadoresOrdenados[i].getFitxes().size(); j++) {
 				if (jugadoresOrdenados[i].getFitxes().get(j).getPartida().getIdPartida() == partida.getIdPartida()) {
-					fitxesPartida[i] = jugadoresOrdenados[i].getFitxes().get(j);
+					fitxesPartida[j + cont*4] = jugadoresOrdenados[i].getFitxes().get(j);
+					
+					fitxesPartida[i].setPosicio(0);
+					System.out.print(fitxesPartida[i].getPosicio() + " fd "+fitxesPartida[i].getId() +" lol "+ fitxesPartida[i].isActiva());
+					
 				}
 			}
+			cont++;
 		}
+		System.out.println(fitxesPartida[1] == null);
 
 	}
 
 	public void tirarDado(Jugador jugador, int cont) {// el cont es para saber cuantas veces tira
 
-		System.out.println("xl Jugadore" + jugador.getNom() + " tira Dados...");
+		System.out.println("Jugador " + jugador.getNom() + " tira Dados...");
 		sc.nextLine();
 
 		Dado d = new Dado();
@@ -145,6 +152,7 @@ public class Juego {
 					if (!fitxa.isActiva()) {
 						fitxa.setPosicio(getCasillaSalida(jugador));
 						fitxa.setActiva(true);
+						System.out.println(fitxa.getId()+" "+ fitxa.getJugador().getNom()+" "+fitxa.isActiva());
 						return true;
 
 					}
@@ -179,99 +187,99 @@ public class Juego {
 
 		Fitxes f = elegirFicha(jugador, "mover");
 		Fitxes f2 = null;
+		if (f != null) {
+			desbloquearCasilla(f, tablero);
 
-		desbloquearCasilla(f, tablero);
+			boolean enTableroCasa = f.getPosicio() > 68;
+			boolean retroceso = false;
 
-		boolean enTableroCasa = f.getPosicio() < 68;
-		boolean retroceso = false;
+			int posTableroCasa = Casillas.CASILLAS_CASA[jugador.getColorInt()];
+			int avances = 1;
 
-		int posTableroCasa = Casillas.CASILLAS_CASA[jugador.getColorInt()];
-		int avances = 1;
+			for (int i = 1; i <= numAvances; i++) {
 
-		for (int i = 1; i <= numAvances; i++) {
+				if (retroceso) {
 
-			if (retroceso) {
+					avances = -1;
+				}
 
-				avances = -1;
+				if (enTableroCasa) {
+
+					if (f.getPosicio() == (posTableroCasa + 8)) {
+						retroceso = true;
+					}
+
+					if (f.getPosicio() == posTableroCasa) {
+
+						if (tablero[getCasillaEntrada(jugador)].getBloqueado() == Casillas.KEY_BLOQUEADO) {
+
+							break;
+
+						} else {
+
+							f.setPosicio(getCasillaEntrada(jugador));
+							enTableroCasa = false;
+
+						}
+
+						f.setPosicio(f.getPosicio() + avances);
+
+					} else {
+
+						bloqueoCasa(jugador, f.getPosicio() + avances);
+
+						f.setPosicio(f.getPosicio() + avances);
+
+					}
+
+					continue;
+				}
+
+				if (tablero[(f.getPosicio() + 1) % 67 + 1].getBloqueado() == Casillas.KEY_BLOQUEADO) {
+					break;
+				} else {
+					if (tablero[(f.getPosicio() + 1) % 67 + 1].getPosicion() == getCasillaEntrada(jugador)) {
+						enTableroCasa = true;
+						f.setPosicio(posTableroCasa);
+					}
+
+					f.setPosicio(f.getPosicio() + avances);
+				}
+
 			}
 
 			if (enTableroCasa) {
 
 				if (f.getPosicio() == (posTableroCasa + 8)) {
-					retroceso = true;
+
+					f.setActiva(false);
+
 				}
 
-				if (f.getPosicio() == posTableroCasa) {
+				return;
+			}
 
-					if (tablero[getCasillaEntrada(jugador)].getBloqueado() == Casillas.KEY_BLOQUEADO) {
+			f2 = hayficha(f);
 
-						break;
+			if (casillaSegura(f, tablero)) {// casilla segura
 
-					} else {
+				if (f2 != null) {// casilla segura con una ficha = a bloqueo
+					tablero[f.getPosicio()].setBloqueado(Casillas.KEY_BLOQUEADO);
 
-						f.setPosicio(getCasillaEntrada(jugador));
-						enTableroCasa = false;
+				}
+				return;
 
+			} else {
+				if (f2 != null) {
+					if (hayfichaColor(f, f2)) {
+						tablero[f.getPosicio()].setBloqueado(Casillas.KEY_BLOQUEADO);
+					} else {// eliminar f2
+						eliminarFicha(f2);
 					}
 
-					f.setPosicio(f.getPosicio() + avances);
-
-				} else {
-
-					bloqueoCasa(jugador, f.getPosicio() + avances);
-
-					f.setPosicio(f.getPosicio() + avances);
-
 				}
-
-				continue;
-			}
-
-			if (tablero[(f.getPosicio() + 1) % 67 + 1].getBloqueado() == Casillas.KEY_BLOQUEADO) {
-				break;
-			} else {
-				if (tablero[(f.getPosicio() + 1) % 67 + 1].getPosicion() == getCasillaEntrada(jugador)) {
-					enTableroCasa = true;
-					f.setPosicio(posTableroCasa);
-				}
-
-				f.setPosicio(f.getPosicio() + avances);
-			}
-
-		}
-
-		if (enTableroCasa) {
-
-			if (f.getPosicio() == (posTableroCasa + 8)) {
-
-				f.setActiva(false);
-
-			}
-
-			return;
-		}
-
-		f2 = hayficha(f);
-
-		if (casillaSegura(f, tablero)) {// casilla segura
-
-			if (f2 != null) {// casilla segura con una ficha = a bloqueo
-				tablero[f.getPosicio()].setBloqueado(Casillas.KEY_BLOQUEADO);
-
-			}
-			return;
-
-		} else {
-			if (f2 != null) {
-				if (hayfichaColor(f, f2)) {
-					tablero[f.getPosicio()].setBloqueado(Casillas.KEY_BLOQUEADO);
-				} else {// eliminar f2
-					eliminarFicha(f2);
-				}
-
 			}
 		}
-
 		// si hay una ficha de un mismo color en una casilla no salvens pues se bloquea
 		// tambien; asi q else{hayFichaColor()}
 
@@ -373,6 +381,7 @@ public class Juego {
 			System.out.print("Seleccione el nÃºmero de la ficha que desea" + accion + ": ");
 			if (sc.hasNextInt()) {
 				opcion = sc.nextInt();
+				
 				if (opcion < 1 || opcion > contador) {
 					System.err.println("Error: Seleccione un nÃºmero vÃ¡lido.");
 				} else {
@@ -381,8 +390,9 @@ public class Juego {
 				}
 			} else {
 				System.err.println("Error: Ingrese un n?mero entero.");
-				sc.next(); // Limpiar el buffer de entrada
+				
 			}
+			sc.next(); // Limpiar el buffer de entrada
 		} while (true);
 
 		int fichaSeleccionada = 0;
