@@ -39,7 +39,7 @@ public class DAOGeneric<T, ID extends Serializable> implements IDAOGeneric<T, ID
 	        session.beginTransaction();
 	        session.saveOrUpdate(entity);
 	        session.getTransaction().commit();
-	        System.out.println("SaveOrUpdate successful for entity: " + entity.getClass().getSimpleName());
+	        //System.out.println("SaveOrUpdate successful for entity: " + entity.getClass().getSimpleName());
 
 	    } catch (HibernateException e) {
 	        e.printStackTrace();

@@ -62,8 +62,6 @@ public class Main {
 		}
     	
         
-    	//p.setEnCurso(false);
-		//p.setFechaFin(Partides.DateAString(new Date()));
 
     }
 }

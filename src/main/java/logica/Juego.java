@@ -6,6 +6,7 @@ package logica;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.Objects;
 import java.util.Scanner;
 
@@ -108,6 +109,12 @@ public class Juego {
         Jugador ganador = victoria();
         if (ganador != null) {
             // FINALIZO LA PARTIDA
+        	partida.setFechaFin(Partides.DateAString(new Date()));
+        	partida.setEnCurso(false);
+        	partida.setGanador(ganador);
+        	ganador.getPartidesGuanyades().add(partida);
+        	pDAO.saveOrUpdate(partida);
+        	jDAO.saveOrUpdate(ganador);
             System.out.println("Partida finalizada el ganador ha sido " + ganador.getNom());
             return;
         }
@@ -116,6 +123,7 @@ public class Juego {
         sc.nextLine();
 
         Dado d = new Dado();
+        Fitxes f;
         ArrayList<Integer> resultado = d.getResultado();
         System.out.println("Ha sacado un " + resultado.get(0) + " y un " + resultado.get(1));
 
@@ -258,6 +266,7 @@ public class Juego {
                     } else {// eliminar f2
                         eliminarFicha(f2);
                     }
+                   
                 }
             }
             
@@ -446,6 +455,7 @@ public class Juego {
                 }
                 if (cont == 4) {
                     return ftxs.getJugador();
+                    
                 }
             }
         }
