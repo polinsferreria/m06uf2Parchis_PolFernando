@@ -2,6 +2,8 @@ package modelo;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -32,14 +34,13 @@ public class Jugador implements Serializable {
 	private int victories;
 
 	@OneToMany(mappedBy = "jugador", cascade = CascadeType.ALL)
-	private ArrayList<Fitxes> fitxes;
+	private List<Fitxes> fitxes;
 	
-	@OneToMany(mappedBy = "guanyador", cascade = CascadeType.ALL)
-	private ArrayList<Partides> partidesGuanyades;
+	@OneToMany(mappedBy = "ganador", cascade = CascadeType.ALL)
+	private List<Partides> partidesGuanyades;
 
-	public Jugador(int id, String nom, String color, int victories) {
+	public Jugador(String nom, String color, int victories) {
 		super();
-		this.id = id;
 		this.nom = nom;
 		this.color = color;
 		this.victories = victories;
@@ -84,7 +85,7 @@ public class Jugador implements Serializable {
 		this.victories = victories;
 	}
 
-	public ArrayList<Fitxes> getFitxes() {
+	public List<Fitxes> getFitxes() {
 		return fitxes;
 	}
 
@@ -92,11 +93,11 @@ public class Jugador implements Serializable {
 		this.fitxes = fitxes;
 	}
 
-	public ArrayList<Partides> getPartidesGuanyades() {
+	public List<Partides> getPartidesGuanyades() {
 		return partidesGuanyades;
 	}
 
-	public void setPartidesGuanyades(ArrayList<Partides> partidesGuanyades) {
+	public void setPartidesGuanyades(List<Partides> partidesGuanyades) {
 		this.partidesGuanyades = partidesGuanyades;
 	}
 

@@ -4,11 +4,14 @@ import java.util.List;
 
 import modelo.Partides;
 
-public class PartidesDAO implements IPartidesDAO {
-
+public class PartidesDAO extends DAOGeneric<Partides, Integer> implements IPartidesDAO {
+	
+	private DAOGeneric<Partides, Integer> p = new DAOGeneric<Partides, Integer>();
+	
 	@Override
 	public void saveOrUpdate(Partides entity) {
 		// TODO Auto-generated method stub
+		p.saveOrUpdate(entity);
 		
 	}
 

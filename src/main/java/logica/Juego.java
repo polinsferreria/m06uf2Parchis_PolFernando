@@ -100,7 +100,7 @@ public class Juego {
 
     public void tirarDado(Jugador jugador, int cont) {// el cont es para saber cuantas veces tira
 
-        System.out.println("Jugador " + jugador.getNom() + " tira Dados...");
+        System.out.print("\n\nJugador " + jugador.getNom() + " tira Dados...");
         sc.nextLine();
 
         Dado d = new Dado();
@@ -151,7 +151,7 @@ public class Juego {
                     if (!fitxa.isActiva()) {
                         fitxa.setPosicio(getCasillaSalida(jugador));
                         fitxa.setActiva(true);
-                        System.out.println(fitxa.getId() + " " + fitxa.getJugador().getNom() + " " + fitxa.isActiva());
+                        System.out.println(fitxa.getId() + " " + fitxa.getJugador().getNom() + " " + fitxa.isActiva() + " " + fitxa.getPosicio());
                         return true;
 
                     }
@@ -169,13 +169,9 @@ public class Juego {
     }
 
     private int getCasillaSalida(Jugador jugador) {
-        for (int i = 0; i < Casillas.CASILLAS_SALIDA.length; i++) {
-            if (tablero[Casillas.CASILLAS_SALIDA[i]].getTipoCasilla().endsWith(jugador.getColor())) {
-                return Casillas.CASILLAS_SALIDA[i];
+        
+            	return Casillas.CASILLAS_SALIDA[jugador.getColorInt()];
 
-            }
-        }
-        return 0;
     }
 
     public int getCasillaEntrada(Jugador jugador) {
@@ -239,7 +235,9 @@ public class Juego {
                 if (tablero[(f.getPosicio() + 1) % 67 + 1].getBloqueado() == Casillas.KEY_BLOQUEADO) {
                     break;
                 } else {
+                	System.out.println(tablero[(f.getPosicio() + 1) % 67 + 1].getPosicion() +" "+ getCasillaEntrada(jugador));
                     if (tablero[(f.getPosicio() + 1) % 67 + 1].getPosicion() == getCasillaEntrada(jugador)) {
+                    	
                         enTableroCasa = true;
                         f.setPosicio(posTableroCasa);
                     }
@@ -361,10 +359,10 @@ public class Juego {
         String fichasActivas = "";
         int contador = 0;
 
-        ArrayList<Fitxes> fitxes = jugador.getFitxes();
+        ArrayList<Fitxes> fitxes = new ArrayList<>();//jugador.getFitxes();
 
         for (Fitxes ficha : fitxes) {
-            if (ficha.isActiva() && ficha.getPosicio() == 0) {
+            if (ficha.isActiva() || ficha.getPosicio() != 0) {
                 contador++;
                 fichasActivas += contador + " [" + ficha.getPosicio() + "] ";
             }
@@ -398,7 +396,7 @@ public class Juego {
 
         int fichaSeleccionada = 0;
         for (Fitxes ficha : fitxes) {
-            if (ficha.isActiva() && ficha.getPosicio() == 0) {
+            if (ficha.isActiva() && ficha.getPosicio() != 0) {
                 fichaSeleccionada++;
                 if (fichaSeleccionada == opcion) {
                     return ficha; // Salir del m?todo despu?s de eliminar la ficha

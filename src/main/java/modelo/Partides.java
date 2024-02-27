@@ -21,7 +21,7 @@ public class Partides {
 	private String fechaFin;
 
 	@ManyToOne
-	@JoinColumn(name = "IdGanador")
+	@JoinColumn(name = "idJugador")
 	private Jugador ganador;
 
 	@Column(name = "EnCurso")

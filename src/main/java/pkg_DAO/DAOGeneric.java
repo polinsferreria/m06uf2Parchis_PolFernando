@@ -35,20 +35,20 @@ public class DAOGeneric<T, ID extends Serializable> implements IDAOGeneric<T, ID
 		// TODO Auto-generated method stub
 		
 		Session session = sessionFactory.getCurrentSession();
-		try {
-			session.beginTransaction();
-			session.saveOrUpdate(entity);
-			session.getTransaction().commit();
+	    try {
+	        session.beginTransaction();
+	        session.saveOrUpdate(entity);
+	        session.getTransaction().commit();
+	        System.out.println("SaveOrUpdate successful for entity: " + entity.getClass().getSimpleName());
 
-		} catch (HibernateException e) {
-			e.printStackTrace();
-			if (session != null && session.getTransaction() != null) {
-				System.out.println("\n.......Transaction Is Being Rolled Back.......");
-				session.getTransaction().rollback();
-			}
-			e.printStackTrace();
-
-		}
+	    } catch (HibernateException e) {
+	        e.printStackTrace();
+	        if (session != null && session.getTransaction() != null) {
+	            System.out.println("\n.......Transaction Is Being Rolled Back.......");
+	            session.getTransaction().rollback();
+	        }
+	        e.printStackTrace();
+	    }
 	}
 
 	@Override
