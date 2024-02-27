@@ -17,102 +17,103 @@ import javax.persistence.Table;
 @Table(name = "JUGADOR")
 public class Jugador implements Serializable {
 
-	public static final String[] COLORES = { "ROJO", "AMARILLO", "AZUL", "VERDE" };
+    public static final String[] COLORES = {"ROJO", "AMARILLO", "AZUL", "VERDE"};
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "idJugador")
-	private int id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "idJugador")
+    private int id;
 
-	@Column(name = "NOM")
-	private String nom;
+    @Column(name = "NOM")
+    private String nom;
 
-	@Column(name = "Color")
-	private String color;
+    @Column(name = "Color")
+    private String color;
 
-	@Column(name = "Victories")
-	private int victories;
+    @Column(name = "Victories")
+    private int victories;
 
-	@OneToMany(mappedBy = "jugador", cascade = CascadeType.ALL)
-	private List<Fitxes> fitxes;
-	
-	@OneToMany(mappedBy = "ganador", cascade = CascadeType.ALL)
-	private List<Partides> partidesGuanyades;
+    @OneToMany(mappedBy = "jugador", cascade = CascadeType.ALL)
+    private List<Fitxes> fitxes;
 
-	public Jugador(String nom, String color) {
-		super();
-		this.nom = nom;
-		this.color = color;
-		
-		inicializarFitxes();
-	}
+    @OneToMany(mappedBy = "ganador", cascade = CascadeType.ALL)
+    private List<Partides> partidesGuanyades;
 
-	public int getId() {
-		return id;
-	}
+    public Jugador(String nom, String color) {
+        super();
+        this.nom = nom;
+        this.color = color;
 
-	public void setId(int id) {
-		this.id = id;
-	}
+        inicializarFitxes();
+    }
 
-	public String getNom() {
-		return nom;
-	}
+    public int getId() {
+        return id;
+    }
 
-	public void setNom(String nom) {
-		this.nom = nom;
-	}
+    public void setId(int id) {
+        this.id = id;
+    }
 
-	public String getColor() {
-		return color;
-	}
+    public String getNom() {
+        return nom;
+    }
 
-	public void setColor(String color) {
-		for (String c : COLORES) {
-	        if (color.equals(c)) {
-	            this.color = color;
-	            return;  // Agregamos un return para salir del bucle si encontramos el color
-	        }
-	    }
-	}
+    public void setNom(String nom) {
+        this.nom = nom;
+    }
 
-	public int getVictories() {
-		return victories;
-	}
+    public String getColor() {
+        return color;
+    }
 
-	public void setVictories() {
-		this.victories = getPartidesGuanyades().size();
-	}
+    public void setColor(String color) {
+        for (String c : COLORES) {
+            if (color.equals(c)) {
+                this.color = color;
+                return;  // Agregamos un return para salir del bucle si encontramos el color
+            }
+        }
+    }
 
-	public List<Fitxes> getFitxes() {
-		return fitxes;
-	}
+    public int getVictories() {
+        return victories;
+    }
 
-	public void setFitxes(ArrayList<Fitxes> fitxes) {
-		this.fitxes = fitxes;
-	}
+    public void setVictories() {
+        this.victories = getPartidesGuanyades().size();
+    }
 
-	public List<Partides> getPartidesGuanyades() {
-		return partidesGuanyades;
-	}
+    public List<Fitxes> getFitxes() {
+        return fitxes;
+    }
 
-	public void setPartidesGuanyades(List<Partides> partidesGuanyades) {
-		this.partidesGuanyades = partidesGuanyades;
-	}
+    public void setFitxes(ArrayList<Fitxes> fitxes) {
+        this.fitxes = fitxes;
+    }
 
-	public static void inicializarFitxes(Partides partida, Jugador jugador) {
+    public List<Partides> getPartidesGuanyades() {
+        return partidesGuanyades;
+    }
 
-		ArrayList<Fitxes> fitxes = new ArrayList<>();
+    public void setPartidesGuanyades(List<Partides> partidesGuanyades) {
+        this.partidesGuanyades = partidesGuanyades;
+    }
 
-		for (int i = 0; i < 4; i++) {
+    public static void inicializarFitxes(Partides partida, Jugador jugador) {
 
-			Fitxes f = new Fitxes( 0, false, jugador, partida);
-			fitxes.add(f);
-			
-		}
-		jugador.setFitxes(fitxes);
-	}
-	public int getColorInt() {
+        ArrayList<Fitxes> fitxes = new ArrayList<>();
+
+        for (int i = 0; i < 4; i++) {
+
+            Fitxes f = new Fitxes(0, false, jugador, partida);
+            fitxes.add(f);
+
+        }
+        jugador.setFitxes(fitxes);
+    }
+
+    public int getColorInt() {
         for (int i = 0; i < COLORES.length; i++) {
             if (COLORES[i].equals(this.color)) {
                 return i;
@@ -120,23 +121,16 @@ public class Jugador implements Serializable {
         }
         return -1;
     }
-
-	private final void inicializarFitxes() {
-
-		this.fitxes = new ArrayList<>();
-
-		for (int i = 0; i < 4; i++) {
-
-			Fitxes f = new Fitxes( false, this);
-			fitxes.add(f);
-
-		}
-
-	}
-
-	@Override
-	public String toString() {
-		return "Jugador{" + "id=" + id + ", nom=" + nom + ", color=" + color + ", victories=" + victories + ", partidesGuanyades=" + partidesGuanyades + '}';
-	}
+    private final void inicializarFitxes() {
+        this.fitxes = new ArrayList<>();
+        for (int i = 0; i < 4; i++) {
+            Fitxes f = new Fitxes(false, this);
+            fitxes.add(f);
+        }
+    }
+    @Override
+    public String toString() {
+        return "Jugador{" + "id=" + id + ", nom=" + nom + ", color=" + color + ", victories=" + victories + ", partidesGuanyades=" + partidesGuanyades + '}';
+    }
 
 }
