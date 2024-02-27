@@ -39,11 +39,10 @@ public class Jugador implements Serializable {
 	@OneToMany(mappedBy = "ganador", cascade = CascadeType.ALL)
 	private List<Partides> partidesGuanyades;
 
-	public Jugador(String nom, String color, int victories) {
+	public Jugador(String nom, String color) {
 		super();
 		this.nom = nom;
 		this.color = color;
-		this.victories = victories;
 		
 		inicializarFitxes();
 	}
@@ -81,8 +80,8 @@ public class Jugador implements Serializable {
 		return victories;
 	}
 
-	public void setVictories(int victories) {
-		this.victories = victories;
+	public void setVictories() {
+		this.victories = getPartidesGuanyades().size();
 	}
 
 	public List<Fitxes> getFitxes() {

@@ -22,16 +22,17 @@ public class Main {
 
     	
     	int cont = 0;
+    	
     	ArrayList<Jugador> jugadores = new ArrayList<Jugador>();
-    	Jugador a1 = new Jugador("jaun1",Jugador.COLORES[0],2);
-        Jugador a2 = new Jugador("jaun2",Jugador.COLORES[1],2);
-        Jugador a3 = new Jugador("jaun3",Jugador.COLORES[2],2);
-        Jugador a4 = new Jugador("jaun4",Jugador.COLORES[3],2);
+    	Jugador a1 = new Jugador("jaun1",Jugador.COLORES[0]);
+        Jugador a2 = new Jugador("jaun2",Jugador.COLORES[1]);
+        Jugador a3 = new Jugador("jaun3",Jugador.COLORES[2]);
+        Jugador a4 = new Jugador("jaun4",Jugador.COLORES[3]);
         
-        Jugador b1 = new Jugador("jaun5",Jugador.COLORES[0],2);
-        Jugador b2 = new Jugador("jaun6",Jugador.COLORES[1],2);
-        Jugador b3 = new Jugador("jaun7",Jugador.COLORES[2],2);
-        Jugador b4 = new Jugador("jaun8",Jugador.COLORES[3],2);
+        Jugador b1 = new Jugador("jaun5",Jugador.COLORES[0]);
+        Jugador b2 = new Jugador("jaun6",Jugador.COLORES[1]);
+        Jugador b3 = new Jugador("jaun7",Jugador.COLORES[2]);
+        Jugador b4 = new Jugador("jaun8",Jugador.COLORES[3]);
         
 
         jugadores.add(a1);
