@@ -22,9 +22,10 @@ import pkg_DAO.*;
  * @author usuario
  */
 public class Juego {
-	public static IPartidesDAO pDAO = new PartidesDAO();
-	public static IJugadorDAO jDAO = new JugadorDAO();
-	public static IFitxesDAO fDAO = new FitxesDAO();
+
+    public static IPartidesDAO pDAO = new PartidesDAO();
+    public static IJugadorDAO jDAO = new JugadorDAO();
+    public static IFitxesDAO fDAO = new FitxesDAO();
     private Scanner sc;
     private Partides partida;
     private Casillas[] tablero;
@@ -59,7 +60,7 @@ public class Juego {
 
         // Lanzar los dados para cada jugador y almacenar los resultados
         for (Jugador jugador : jugadores) {
-        	
+
             System.out.println("El jugador " + jugador.getNom() + " tira los dados...");
             Dado dado = new Dado();
             ArrayList<Integer> res = dado.getResultado();
@@ -67,7 +68,7 @@ public class Juego {
             resultados.add(sumaDados);
             System.out.println("Ha sacado un " + res.get(0) + " y un " + res.get(1));
             Jugador.inicializarFitxes(partida, jugador);
-            
+
         }
 
         // Crear una copia de los resultados para ordenarlos
@@ -107,15 +108,16 @@ public class Juego {
     public void tirarDado(Jugador jugador, int cont) {// el cont es para saber cuantas veces tira
 
         Jugador ganador = victoria();
+        Fitxes f;
         if (ganador != null) {
             // FINALIZO LA PARTIDA
-        	partida.setFechaFin(Partides.DateAString(new Date()));
-        	partida.setEnCurso(false);
-        	partida.setGanador(ganador);
-        	ganador.getPartidesGuanyades().add(partida);
-        	ganador.setVictories();
-        	pDAO.saveOrUpdate(partida);
-        	jDAO.saveOrUpdate(ganador);
+            partida.setFechaFin(Partides.DateAString(new Date()));
+            partida.setEnCurso(false);
+            partida.setGanador(ganador);
+            ganador.getPartidesGuanyades().add(partida);
+            ganador.setVictories();
+            pDAO.saveOrUpdate(partida);
+            jDAO.saveOrUpdate(ganador);
             System.out.println("Partida finalizada el ganador ha sido " + ganador.getNom());
             return;
         }
@@ -123,8 +125,7 @@ public class Juego {
         System.out.println("Jugador " + jugador.getNom() + " tira Dados...");
         sc.nextLine();
 
-        Dado d = new Dado();
-        Fitxes f;
+        Dado d = new Dado();    
         ArrayList<Integer> resultado = d.getResultado();
         System.out.println("Ha sacado un " + resultado.get(0) + " y un " + resultado.get(1));
 
@@ -138,7 +139,11 @@ public class Juego {
         // SI SALEN DOBLES, MUEBE LA FICHA Y VUELVE A TIRAR
         if ((resultado.get(0) == resultado.get(1)) && cont < 3) {
             System.out.println("Felices salieron dobles es la " + cont + "ª vez  consecutiva");
-            fDAO.saveOrUpdate(moverFitxa(jugador, resultado.get(0) + resultado.get(1), tablero)); 
+            f = moverFitxa(jugador, resultado.get(0) + resultado.get(1), tablero);
+            if (f != null) {
+                fDAO.saveOrUpdate(f);
+            }
+
             tirarDado(jugador, ++cont);
             return;
 
@@ -150,7 +155,10 @@ public class Juego {
         }
 
         //SI NO SE CUMPLE LOS IF ANTERIORES LLEGA AQUI
-        fDAO.saveOrUpdate(moverFitxa(jugador, resultado.get(0) + resultado.get(1), tablero));
+        f = moverFitxa(jugador, resultado.get(0) + resultado.get(1), tablero);
+        if (f != null) {
+            fDAO.saveOrUpdate(f);
+        }
     }
 
     public boolean Sacarficha(Jugador jugador) {
@@ -204,13 +212,13 @@ public class Juego {
         if (f != null) {
             boolean enTableroCasa = f.getPosicio() > 69;
             boolean retroceso = false;
-            
+
             if (!enTableroCasa) {
                 desbloquearCasilla(f, tablero);
             }
             int posTableroCasa = Casillas.CASILLAS_CASA[jugador.getColorInt()];
             int avances = 1;
-            
+
             for (int i = 1; i <= numAvances; i++) {
                 if (retroceso) {
                     avances = -1;
@@ -267,14 +275,14 @@ public class Juego {
                     } else {// eliminar f2
                         eliminarFicha(f2);
                     }
-                   
+
                 }
             }
-            
+
         }
         // si hay una ficha de un mismo color en una casilla no salvens pues se bloquea
         // tambien; asi q else{hayFichaColor()}
-		return f;
+        return f;
     }
 
     private boolean hayfichaColor(Fitxes f, Fitxes f2) {
@@ -349,7 +357,7 @@ public class Juego {
         String fichasActivas = "";
         int contador = 0;
 
-        ArrayList<Fitxes> fitxes = (ArrayList <Fitxes>) jugador.getFitxes();
+        ArrayList<Fitxes> fitxes = (ArrayList<Fitxes>) jugador.getFitxes();
 
         for (Fitxes ficha : fitxes) {
             if (ficha.isActiva() || ficha.getPosicio() != 0) {
@@ -413,7 +421,7 @@ public class Juego {
     }
 
     public void eliminarFicha(Fitxes fitxe) {
-    	
+
         fitxe.setActiva(false);
         fitxe.setPosicio(0);
         fDAO.saveOrUpdate(fitxe);
@@ -456,7 +464,7 @@ public class Juego {
                 }
                 if (cont == 4) {
                     return ftxs.getJugador();
-                    
+
                 }
             }
         }
