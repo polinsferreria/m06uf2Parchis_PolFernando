@@ -27,9 +27,8 @@ public class Partides {
 	@Column(name = "EnCurso")
 	private boolean enCurso;
 
-	public Partides(int idPartida, String fechaInicio, String fechaFin, Jugador ganador, boolean enCurso) {
+	public Partides( String fechaInicio, String fechaFin, Jugador ganador, boolean enCurso) {
 		super();
-		this.idPartida = idPartida;
 		this.fechaInicio = fechaInicio;
 		this.fechaFin = fechaFin;
 		this.ganador = ganador;

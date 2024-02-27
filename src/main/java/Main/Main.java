@@ -18,7 +18,7 @@ public class Main {
 
     public static void main(String[] args) {
         // TODO code application logic here
-    	Utils.getSessionFactory();
+    	//Utils.getSessionFactory();
 
     	
     	int cont = 0;
@@ -48,20 +48,11 @@ public class Main {
     	for (int i = 0; i < jugadores.size(); i++) {
     		
     		jugaores4.add(jugadores.get(i));
-    		
+    		Juego.jDAO.saveOrUpdate(jugadores.get(i));// GUARDAR JUGADORES EN LA BASE DE DATOS 
     		if(jugaores4.size() == 4) {
     			
     			Partides p = new Partides();
-    			/*Juego.pDAO.saveOrUpdate(p);
-    			
-    			p.setEnCurso(false);
-    			p.setFechaFin(Partides.DateAString(new Date()));
-    			Juego.jDAO.saveOrUpdate(a2);
-    			p.setGanador(a2);
-    			
     			Juego.pDAO.saveOrUpdate(p);
-    			
-    			System.out.println("fin");*/
     			
     			new Juego(p,jugaores4);
     			
@@ -71,7 +62,8 @@ public class Main {
 		}
     	
         
-        
+    	//p.setEnCurso(false);
+		//p.setFechaFin(Partides.DateAString(new Date()));
 
     }
 }

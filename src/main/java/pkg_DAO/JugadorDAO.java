@@ -5,9 +5,9 @@ import java.util.List;
 import modelo.Jugador;
 import modelo.Partides;
 
-public class JugadorDAO implements IJugadorDAO{
+public class JugadorDAO extends DAOGeneric<Jugador, Integer> implements IJugadorDAO{
 
-	private DAOGeneric<Jugador, Integer> j = new DAOGeneric<Jugador, Integer>();
+	/*private DAOGeneric<Jugador, Integer> j = new DAOGeneric<Jugador, Integer>();
 	
 	@Override
 	public void saveOrUpdate(Jugador entity) {
@@ -37,6 +37,6 @@ public class JugadorDAO implements IJugadorDAO{
 	public List<Jugador> list() {
 		// TODO Auto-generated method stub
 		return null;
-	}
+	}*/
 
 }

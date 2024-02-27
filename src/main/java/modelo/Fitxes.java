@@ -26,21 +26,20 @@ public class Fitxes implements Serializable {
     @JoinColumn(name = "IdPartida")
     private Partides partida;
 
-    public Fitxes(int id, int posicio, boolean activa, Jugador jugador, Partides partida) {
+    public Fitxes( int posicio, boolean activa, Jugador jugador, Partides partida) {
         super();
-        this.id = id;
         this.posicio = posicio;
         this.activa = activa;
         this.jugador = jugador;
         this.partida = partida;
     }
 
-    public Fitxes(int id,int posicio, boolean activa) {
+    public Fitxes(int posicio, boolean activa) {
         this.posicio = posicio;
         this.activa = activa;
     }
 
-    public Fitxes(int id, boolean activa, Jugador jugador) {
+    public Fitxes( boolean activa, Jugador jugador) {
         this.activa = activa;
         this.jugador = jugador;
     }

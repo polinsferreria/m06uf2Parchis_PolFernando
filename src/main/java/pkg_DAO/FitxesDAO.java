@@ -6,7 +6,7 @@ import modelo.Fitxes;
 import modelo.Partides;
 
 public class FitxesDAO extends DAOGeneric<Fitxes, Integer> implements IFitxesDAO {
-	private DAOGeneric<Fitxes, Integer> f = new DAOGeneric<Fitxes, Integer>();
+	/*private DAOGeneric<Fitxes, Integer> f = new DAOGeneric<Fitxes, Integer>();
 	
 	@Override
 	public void saveOrUpdate(Fitxes entity) {
@@ -36,6 +36,6 @@ public class FitxesDAO extends DAOGeneric<Fitxes, Integer> implements IFitxesDAO
 	public List<Fitxes> list() {
 		// TODO Auto-generated method stub
 		return null;
-	}
+	}*/
 
 }

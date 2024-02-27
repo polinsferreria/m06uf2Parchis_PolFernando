@@ -107,7 +107,7 @@ public class Jugador implements Serializable {
 
 		for (int i = 0; i < 4; i++) {
 
-			Fitxes f = new Fitxes(i, 0, false, jugador, partida);
+			Fitxes f = new Fitxes( 0, false, jugador, partida);
 			fitxes.add(f);
 			
 		}
@@ -128,7 +128,7 @@ public class Jugador implements Serializable {
 
 		for (int i = 0; i < 4; i++) {
 
-			Fitxes f = new Fitxes(0, false, this);
+			Fitxes f = new Fitxes( false, this);
 			fitxes.add(f);
 
 		}

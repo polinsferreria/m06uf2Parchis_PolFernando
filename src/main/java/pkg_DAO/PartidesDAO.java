@@ -6,7 +6,7 @@ import modelo.Partides;
 
 public class PartidesDAO extends DAOGeneric<Partides, Integer> implements IPartidesDAO {
 	
-	private DAOGeneric<Partides, Integer> p = new DAOGeneric<Partides, Integer>();
+	/*private DAOGeneric<Partides, Integer> p = new DAOGeneric<Partides, Integer>();
 	
 	@Override
 	public void saveOrUpdate(Partides entity) {
@@ -37,6 +37,6 @@ public class PartidesDAO extends DAOGeneric<Partides, Integer> implements IParti
 	public List<Partides> list() {
 		// TODO Auto-generated method stub
 		return null;
-	}
+	}*/
 
 }

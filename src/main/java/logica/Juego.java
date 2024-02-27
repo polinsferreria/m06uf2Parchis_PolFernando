@@ -14,18 +14,16 @@ import modelo.Dado;
 import modelo.Fitxes;
 import modelo.Jugador;
 import modelo.Partides;
-import pkg_DAO.FitxesDAO;
-import pkg_DAO.JugadorDAO;
-import pkg_DAO.PartidesDAO;
+import pkg_DAO.*;
 
 /**
  *
  * @author usuario
  */
 public class Juego {
-	public static PartidesDAO pDAO = new PartidesDAO();
-	public static JugadorDAO jDAO = new JugadorDAO();
-	public static FitxesDAO fDAO = new FitxesDAO();
+	public static IPartidesDAO pDAO = new PartidesDAO();
+	public static IJugadorDAO jDAO = new JugadorDAO();
+	public static IFitxesDAO fDAO = new FitxesDAO();
     private Scanner sc;
     private Partides partida;
     private Casillas[] tablero;
@@ -60,6 +58,7 @@ public class Juego {
 
         // Lanzar los dados para cada jugador y almacenar los resultados
         for (Jugador jugador : jugadores) {
+        	
             System.out.println("El jugador " + jugador.getNom() + " tira los dados...");
             Dado dado = new Dado();
             ArrayList<Integer> res = dado.getResultado();
@@ -67,6 +66,7 @@ public class Juego {
             resultados.add(sumaDados);
             System.out.println("Ha sacado un " + res.get(0) + " y un " + res.get(1));
             Jugador.inicializarFitxes(partida, jugador);
+            
         }
 
         // Crear una copia de los resultados para ordenarlos
@@ -96,6 +96,7 @@ public class Juego {
                 if (jugadoresOrdenados[i].getFitxes().get(j).getPartida().getIdPartida() == partida.getIdPartida()) {
                     fitxesPartida[cont] = jugadoresOrdenados[i].getFitxes().get(j);
                     fitxesPartida[i].setPosicio(0);
+                    fDAO.saveOrUpdate(fitxesPartida[i]);//GUARDAR FITXAS EN LA BASE DE DATOS
                     cont++;
                 }
             }
@@ -162,6 +163,7 @@ public class Juego {
                     if (!fitxa.isActiva() && fitxa.getPosicio() == 0) {
                         fitxa.setPosicio(getCasillaSalida(jugador));
                         fitxa.setActiva(true);
+                        fDAO.saveOrUpdate(fitxa);
                         // SE BLOQUEA LA CASILLA SI ENCUENTRA UNA FICHA
                         if (hayficha(fitxa) != null) {
                             accederTablero(getCasillaSalida(jugador)).setBloqueado(Casillas.KEY_BLOQUEADO);
