@@ -22,7 +22,7 @@ public class Main {
 
     	
     	int cont = 0;
-    	
+    	//if de get jugadores BBDD y si no hay crearlos :D
     	ArrayList<Jugador> jugadores = new ArrayList<Jugador>();
     	Jugador a1 = new Jugador("jaun1",Jugador.COLORES[0]);
         Jugador a2 = new Jugador("jaun2",Jugador.COLORES[1]);

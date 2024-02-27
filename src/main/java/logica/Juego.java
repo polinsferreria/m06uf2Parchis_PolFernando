@@ -113,6 +113,7 @@ public class Juego {
         	partida.setEnCurso(false);
         	partida.setGanador(ganador);
         	ganador.getPartidesGuanyades().add(partida);
+        	ganador.setVictories();
         	pDAO.saveOrUpdate(partida);
         	jDAO.saveOrUpdate(ganador);
             System.out.println("Partida finalizada el ganador ha sido " + ganador.getNom());
