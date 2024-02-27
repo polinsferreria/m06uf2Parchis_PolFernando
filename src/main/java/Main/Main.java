@@ -7,7 +7,6 @@ import com.mysql.cj.xdevapi.SessionFactory;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import logica.Juego;
-import modelo.Fitxes;
 import modelo.Jugador;
 import modelo.Partides;
 import pkg_DAO.DAOGeneric;
@@ -15,7 +14,7 @@ import pkg_DAO.PartidesDAO;
 import pkg_DAO.Utils;
 
 public class Main {
-    
+
     public static void main(String[] args) {
         // TODO code application logic here
     	Utils.getSessionFactory();
@@ -33,17 +32,17 @@ public class Main {
         Jugador b3 = new Jugador("jaun7",Jugador.COLORES[2],2);
         Jugador b4 = new Jugador("jaun8",Jugador.COLORES[3],2);
         
+
         jugadores.add(a1);
         jugadores.add(a2);
         jugadores.add(a3);
         jugadores.add(a4);
-        
+
         jugadores.add(b1);
         jugadores.add(b2);
         jugadores.add(b3);
         jugadores.add(b4);
-        
-        /*Partides p1 = new Partides(1,);*/
+
         ArrayList<Jugador> jugaores4 = new ArrayList<Jugador>();
     	for (int i = 0; i < jugadores.size(); i++) {
     		
@@ -65,7 +64,6 @@ public class Main {
     	
         
         
+
     }
-    
-        
 }

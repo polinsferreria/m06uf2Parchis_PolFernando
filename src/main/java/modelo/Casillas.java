@@ -100,8 +100,8 @@ public class Casillas {
                 tipo = STR_TIPO_SEGURA;
                 cont2++;
             } else if (i == CASILLAS_SALIDA[cont]) {
-                String color = Jugador.COLORES[cont];
-                tipo = STR_TIPO_SALIDA + color;
+                //String color = Jugador.COLORES[cont];
+                tipo = STR_TIPO_SEGURA;
                 cont++;
             }
 

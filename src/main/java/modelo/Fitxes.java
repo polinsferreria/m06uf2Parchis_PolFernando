@@ -83,7 +83,7 @@ public class Fitxes implements Serializable {
 
     @Override
     public String toString() {
-        return "Fitxes{" + "posicio=" + posicio + ", activa=" + activa + ", jugador=" + jugador + ", partida=" + partida + '}';
+        return "Fitxes{" + "posicio=" + posicio + ", activa=" + activa + ", jugador=" + jugador.getNom() + ", partida=" + partida + '}';
     }
 
 }

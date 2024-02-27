@@ -86,7 +86,7 @@ public class Jugador implements Serializable {
 	}
 
 	public List<Fitxes> getFitxes() {
-		return fitxes;
+		return (ArrayList <Fitxes>) fitxes;
 	}
 
 	public void setFitxes(ArrayList<Fitxes> fitxes) {
@@ -137,8 +137,7 @@ public class Jugador implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Jugador{" + "id=" + id + ", nom=" + nom + ", color=" + color + ", victories=" + victories + ", fitxes="
-				+ fitxes + ", partidesGuanyades=" + partidesGuanyades + '}';
+		return "Jugador{" + "id=" + id + ", nom=" + nom + ", color=" + color + ", victories=" + victories + ", partidesGuanyades=" + partidesGuanyades + '}';
 	}
 
 }

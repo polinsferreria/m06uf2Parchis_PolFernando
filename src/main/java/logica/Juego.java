@@ -6,6 +6,7 @@ package logica;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Objects;
 import java.util.Scanner;
 
 import modelo.Casillas;
@@ -42,7 +43,7 @@ public class Juego {
         do {
             for (int i = 0; i < jugadoresOrdenados.length; i++) {
                 if (jugadoresOrdenados[i] != null) {
-                    tirarDado(jugadoresOrdenados[i], 0);
+                    tirarDado(jugadoresOrdenados[i], 1);
                 }
             }
         } while (partida.isEnCurso());
@@ -67,7 +68,7 @@ public class Juego {
         ArrayList<Integer> resultadosOrdenados = new ArrayList<>(resultados);
         Collections.sort(resultadosOrdenados, Collections.reverseOrder());
 
-        // Crear un arreglo de jugadores ordenados según los resultados de lanzamiento
+        // Crear un arreglo de jugadores ordenados segÃºn los resultados de lanzamiento
         // de dados
         Jugador[] ordenados = new Jugador[jugadores.size()];
         for (int i = 0; i < resultadosOrdenados.size(); i++) {
@@ -90,206 +91,182 @@ public class Juego {
                 if (jugadoresOrdenados[i].getFitxes().get(j).getPartida().getIdPartida() == partida.getIdPartida()) {
                     fitxesPartida[cont] = jugadoresOrdenados[i].getFitxes().get(j);
                     fitxesPartida[i].setPosicio(0);
-                    System.out.print(fitxesPartida[i].getPosicio() + " fd " + fitxesPartida[i].getId() + " lol " + fitxesPartida[i].isActiva());
                     cont++;
                 }
-            }          
+            }
         }
-        System.out.println(fitxesPartida[1] == null);
     }
 
     public void tirarDado(Jugador jugador, int cont) {// el cont es para saber cuantas veces tira
 
-        System.out.print("\n\nJugador " + jugador.getNom() + " tira Dados...");
+        Jugador ganador = victoria();
+        if (ganador != null) {
+            // FINALIZO LA PARTIDA
+            System.out.println("Partida finalizada el ganador ha sido " + ganador.getNom());
+            return;
+        }
+
+        System.out.println("Jugador " + jugador.getNom() + " tira Dados...");
         sc.nextLine();
 
         Dado d = new Dado();
         ArrayList<Integer> resultado = d.getResultado();
-
         System.out.println("Ha sacado un " + resultado.get(0) + " y un " + resultado.get(1));
 
-        if (resultado.get(0) == resultado.get(1) && cont <= 3) {
-
-            System.out.println("Felices salieron dobles");
-            if (comprovarFichas(jugador)) {
-                if (!Sacarficha(jugador)) {
-                    moverFitxa(jugador, resultado.get(0) + resultado.get(1), tablero);
-                } else {
-
-                }
-            } else {
-                moverFitxa(jugador, resultado.get(0) + resultado.get(1), tablero);
+        // SI UN DADO SACA UN 5, PUEDE SACAR FICHA
+        if ((resultado.get(0) == 5 || resultado.get(1) == 5) && comprovarFichas(jugador) && Sacarficha(jugador)) {
+            if (resultado.get(0) == resultado.get(1) && cont < 4) {
+                tirarDado(jugador, ++cont);
             }
-
-            tirarDado(jugador, cont++);// si tira mas de 3 veces dobles se cumplira el de abajo
+            return;
+        }
+        // SI SALEN DOBLES, MUEBE LA FICHA Y VUELVE A TIRAR
+        if ((resultado.get(0) == resultado.get(1)) && cont < 3) {
+            System.out.println("Felices salieron dobles es la " + cont + "ª vez  consecutiva");
+            moverFitxa(jugador, resultado.get(0) + resultado.get(1), tablero);
+            tirarDado(jugador, ++cont);
             return;
 
-        } else if (resultado.get(0) == resultado.get(1)) {// tendra q eliminar ficha
-
+            // SI ES LA 3ª VEZ QUE SALEN SE ELIMINA LA FICHA QUE EL ESCOJA
+        } else if (resultado.get(0) == resultado.get(1)) {
             System.out.println("Lastima perdiste una ficha... ");
-
             eliminarFicha(elegirFicha(jugador, "Eliminar"));
             return;
         }
 
+        //SI NO SE CUMPLE LOS IF ANTERIORES LLEGA AQUI
         moverFitxa(jugador, resultado.get(0) + resultado.get(1), tablero);
-        // cambioTurno;
-
     }
 
-//metodo de fitxas de cada jugador al array fitxesPartida
     public boolean Sacarficha(Jugador jugador) {
 
+        // EN CASO DE QUE ESTE BLOQUEADA LA CASILLA NO PUEDE SACAR
+        if (accederTablero(getCasillaSalida(jugador)).getBloqueado() == Casillas.KEY_BLOQUEADO) {
+            return false;
+        }
+        // SE IMPRIME LA INFO DE LA PARTIDA
+        infoPartida(jugador);
+        // PREGUNTA
         System.out.println("Quieres sacar una ficha? [Si / No]");
-
+        // BUCLE PARA OBTENER SOLO SI O NO
         do {
-
             String res = sc.nextLine();
-
             if (res.equals("Si")) {
+                // EN CASO DE SI BUSCAMOS LA PRIMERA FICHA NO ACTIVA QUE TENGA POSICION 0 (SI LA TIENEN DIFERENTE ES QUE HABRAN GANADO)
                 for (Fitxes fitxa : jugador.getFitxes()) {
-                    if (!fitxa.isActiva()) {
+                    if (!fitxa.isActiva() && fitxa.getPosicio() == 0) {
                         fitxa.setPosicio(getCasillaSalida(jugador));
                         fitxa.setActiva(true);
-                        System.out.println(fitxa.getId() + " " + fitxa.getJugador().getNom() + " " + fitxa.isActiva() + " " + fitxa.getPosicio());
+                        // SE BLOQUEA LA CASILLA SI ENCUENTRA UNA FICHA
+                        if (hayficha(fitxa) != null) {
+                            accederTablero(getCasillaSalida(jugador)).setBloqueado(Casillas.KEY_BLOQUEADO);
+                        }
                         return true;
-
                     }
                 }
-
             } else if (res.equals("No")) {
-
                 return false;
             }
-
-            System.out.println("Error, forato no adecuado");
-
+            System.out.println("Error, formato no adecuado");
         } while (true);
-
     }
 
     private int getCasillaSalida(Jugador jugador) {
-        
-            	return Casillas.CASILLAS_SALIDA[jugador.getColorInt()];
-
+        return Casillas.CASILLAS_SALIDA[jugador.getColorInt()];
     }
 
     public int getCasillaEntrada(Jugador jugador) {
         int CE = getCasillaSalida(jugador) - 5;
         return CE == 0 ? 68 : CE;
-
     }
 
     public void moverFitxa(Jugador jugador, int numAvances, Casillas[] tablero) {
-
-        Fitxes f = elegirFicha(jugador, "mover");
+        Fitxes f = elegirFicha(jugador, " mover ");
+        // System.out.println("");
         Fitxes f2 = null;
+        // System.out.println(f);
         if (f != null) {
-            desbloquearCasilla(f, tablero);
-
-            boolean enTableroCasa = f.getPosicio() > 68;
+            boolean enTableroCasa = f.getPosicio() > 69;
             boolean retroceso = false;
-
+            
+            if (!enTableroCasa) {
+                desbloquearCasilla(f, tablero);
+            }
             int posTableroCasa = Casillas.CASILLAS_CASA[jugador.getColorInt()];
             int avances = 1;
-
+            
             for (int i = 1; i <= numAvances; i++) {
-
                 if (retroceso) {
-
                     avances = -1;
                 }
-
                 if (enTableroCasa) {
-
-                    if (f.getPosicio() == (posTableroCasa + 8)) {
+                    if (f.getPosicio() >= (posTableroCasa + 8)) {
                         retroceso = true;
+                        avances = -1;
                     }
-
                     if (f.getPosicio() == posTableroCasa) {
-
-                        if (tablero[getCasillaEntrada(jugador)].getBloqueado() == Casillas.KEY_BLOQUEADO) {
-
+                        if (accederTablero(getCasillaEntrada(jugador)).getBloqueado() == Casillas.KEY_BLOQUEADO) {
                             break;
-
                         } else {
-
                             f.setPosicio(getCasillaEntrada(jugador));
                             enTableroCasa = false;
-
                         }
-
                         f.setPosicio(f.getPosicio() + avances);
-
                     } else {
-
                         bloqueoCasa(jugador, f.getPosicio() + avances);
-
                         f.setPosicio(f.getPosicio() + avances);
-
                     }
-
                     continue;
                 }
 
-                if (tablero[(f.getPosicio() + 1) % 67 + 1].getBloqueado() == Casillas.KEY_BLOQUEADO) {
+                if (accederTablero(f.getPosicio() + 1).getBloqueado() == Casillas.KEY_BLOQUEADO) {
                     break;
                 } else {
-                	System.out.println(tablero[(f.getPosicio() + 1) % 67 + 1].getPosicion() +" "+ getCasillaEntrada(jugador));
-                    if (tablero[(f.getPosicio() + 1) % 67 + 1].getPosicion() == getCasillaEntrada(jugador)) {
-                    	
+                    if (accederTablero(f.getPosicio()).getPosicion() == getCasillaEntrada(jugador)) {
                         enTableroCasa = true;
                         f.setPosicio(posTableroCasa);
                     }
 
                     f.setPosicio(f.getPosicio() + avances);
                 }
-
             }
 
             if (enTableroCasa) {
-
                 if (f.getPosicio() == (posTableroCasa + 8)) {
-
                     f.setActiva(false);
-
                 }
-
                 return;
             }
 
             f2 = hayficha(f);
-
             if (casillaSegura(f, tablero)) {// casilla segura
-
                 if (f2 != null) {// casilla segura con una ficha = a bloqueo
-                    tablero[f.getPosicio()].setBloqueado(Casillas.KEY_BLOQUEADO);
-
+                    accederTablero(f.getPosicio()).setBloqueado(Casillas.KEY_BLOQUEADO);
                 }
                 return;
-
             } else {
                 if (f2 != null) {
                     if (hayfichaColor(f, f2)) {
-                        tablero[f.getPosicio()].setBloqueado(Casillas.KEY_BLOQUEADO);
+                        accederTablero(f.getPosicio()).setBloqueado(Casillas.KEY_BLOQUEADO);
                     } else {// eliminar f2
                         eliminarFicha(f2);
                     }
-
                 }
             }
         }
         // si hay una ficha de un mismo color en una casilla no salvens pues se bloquea
         // tambien; asi q else{hayFichaColor()}
-
     }
 
     private boolean hayfichaColor(Fitxes f, Fitxes f2) {
         return f.getJugador().getColor().equals(f2.getJugador().getColor());
     }
 
-    private Fitxes hayficha(Fitxes f) {
+    private boolean hayfichaColor(String color, Fitxes f2) {
+        return color.equals(f2.getJugador().getColor());
+    }
 
+    private Fitxes hayficha(Fitxes f) {
         for (int i = 0; i < fitxesPartida.length; i++) {
             if (f.getPosicio() == fitxesPartida[i].getPosicio() && f.getId() != fitxesPartida[i].getId()) {
                 return fitxesPartida[i];
@@ -298,97 +275,103 @@ public class Juego {
         return null;
     }
 
+    private ArrayList<Fitxes> hayFichasSalidaDiferenteColor(Jugador jugador) {
+        ArrayList<Fitxes> ftxs = new ArrayList<>();
+        for (Fitxes f : fitxesPartida) {
+            if (f.getPosicio() == getCasillaSalida(jugador) && !f.getJugador().getColor().equals(jugador.getColor())) {
+                ftxs.add(f);
+            }
+        }
+        return ftxs;
+    }
+
     private boolean bloqueoCasa(Jugador j, int pos) {
-
         int cont = 0;
-
         for (Fitxes fitxes : fitxesPartida) {
-
             if (fitxes.getJugador().equals(j) && fitxes.getPosicio() == pos) {
                 cont++;
-
                 if (cont == 2) {
                     return true;
                 }
             }
-
         }
-
         return false;
-
     }
 
     private boolean casillaSegura(Fitxes f, Casillas[] tablero) {
-        return tablero[f.getPosicio()].getTipoCasilla().equals(Casillas.STR_TIPO_SEGURA);
+        return accederTablero(f.getPosicio()).getTipoCasilla().equals(Casillas.STR_TIPO_SEGURA);
     }
 
     private boolean desbloquearCasilla(Fitxes f, Casillas[] tablero) {
         boolean Debloqueado = false;
-        if (tablero[f.getPosicio()].getBloqueado() == Casillas.KEY_BLOQUEADO) {
-            tablero[f.getPosicio()].setBloqueado(Casillas.KEY_NO_BLOQUEADO);
+        if (accederTablero(f.getPosicio()).getBloqueado() == Casillas.KEY_BLOQUEADO) {
+            accederTablero(f.getPosicio()).setBloqueado(Casillas.KEY_NO_BLOQUEADO);
             Debloqueado = true;
         }
         return Debloqueado;
-
     }
 
     private boolean comprovarFichas(Jugador jugador) {
 
-        ArrayList<Fitxes> fitxes = (ArrayList<Fitxes>) jugador.getFitxes();
-
-        if (tablero[getCasillaSalida(jugador)].getBloqueado() == Casillas.KEY_BLOQUEADO) {
-
+        if (accederTablero(getCasillaSalida(jugador)).getBloqueado() == Casillas.KEY_BLOQUEADO) {
             return false;
         }
 
+        ArrayList<Fitxes> fitxes = (ArrayList<Fitxes>) jugador.getFitxes();
         for (Fitxes fitxe : fitxes) {
-
-            if (!fitxe.isActiva()) {
-
+            if (!fitxe.isActiva() && fitxe.getPosicio() == 0) {
                 return true;
-
             }
-
         }
-
         return false;
-
     }
 
     private Fitxes elegirFicha(Jugador jugador, String accion) {
         String fichasActivas = "";
         int contador = 0;
 
-        ArrayList<Fitxes> fitxes = new ArrayList<>();//jugador.getFitxes();
+        ArrayList<Fitxes> fitxes = (ArrayList <Fitxes>) jugador.getFitxes();
 
         for (Fitxes ficha : fitxes) {
             if (ficha.isActiva() || ficha.getPosicio() != 0) {
+                if (!ficha.isActiva() && ficha.getPosicio() != 0) {
+                    continue;
+                }
                 contador++;
-                fichasActivas += contador + " [" + ficha.getPosicio() + "] ";
+                if (ficha.getPosicio() == 0) {
+                    fichasActivas += contador + " [" + getCasillaSalida(ficha.getJugador()) + "] ";
+                } else if (ficha.getPosicio() > 68) {
+                    fichasActivas += contador + " [c" + (ficha.getPosicio() - Casillas.CASILLAS_CASA[jugador.getColorInt()]) + "] ";
+                } else {
+                    fichasActivas += contador + " [" + ficha.getPosicio() + "] ";
+                }
+
             }
         }
-
-        System.out.println("Fichas activas: " + fichasActivas);
 
         if (contador == 0) {
             System.out.println("No hay fichas activas para " + accion + ".");
             return null; // No hay fichas activas, salir del m?todo
         }
 
+        infoPartida(jugador);
+
+        System.out.println("Fichas activas: " + fichasActivas);
+
         int opcion;
         do {
-            System.out.print("Seleccione el nÃºmero de la ficha que desea" + accion + ": ");
+            System.out.print("Seleccione el numero de la ficha que desea" + accion + ": ");
             if (sc.hasNextInt()) {
                 opcion = sc.nextInt();
 
                 if (opcion < 1 || opcion > contador) {
-                    System.err.println("Error: Seleccione un nÃºmero vÃ¡lido.");
+                    System.err.println("Error: Seleccione un numero valido.");
                 } else {
 
                     break; // Salir del bucle si la entrada es v?lida
                 }
             } else {
-                System.err.println("Error: Ingrese un n?mero entero.");
+                System.err.println("Error: Ingrese un numero entero.");
 
             }
             sc.next(); // Limpiar el buffer de entrada
@@ -396,7 +379,10 @@ public class Juego {
 
         int fichaSeleccionada = 0;
         for (Fitxes ficha : fitxes) {
-            if (ficha.isActiva() && ficha.getPosicio() != 0) {
+            if (ficha.isActiva() || ficha.getPosicio() != 0) {
+                if (!ficha.isActiva() && ficha.getPosicio() != 0) {
+                    continue;
+                }
                 fichaSeleccionada++;
                 if (fichaSeleccionada == opcion) {
                     return ficha; // Salir del m?todo despu?s de eliminar la ficha
@@ -412,4 +398,54 @@ public class Juego {
         fitxe.setPosicio(0);
         System.out.println("Ficha eliminada con ?xito.");
     }
+
+    private void infoPartida(Jugador jugadorT) {
+        System.out.println("--------------------------------------------------");
+        System.out.println("Estado de la partida:");
+        System.out.println("Turno del jugador " + jugadorT.getNom());
+
+        for (Jugador jugador : jugadoresOrdenados) {
+            System.out.println("Fichas activas del jugador: " + jugador.getNom());
+            for (Fitxes ftx : fitxesPartida) {
+                if (ftx.isActiva() && ftx.getJugador().equals(jugador)) {
+                    if (ftx.getPosicio() < 68) {
+                        System.out.println("Ficha " + ftx.getId() + " - Posición: " + ftx.getPosicio() + " - Casilla " + accederTablero(ftx.getPosicio()).getTipoCasilla());
+                    } else {
+                        System.out.println("Ficha " + ftx.getId() + " - Posición: c" + (ftx.getPosicio() - Casillas.CASILLAS_CASA[jugador.getColorInt()]) + " - Casilla Casa");
+                    }
+                } else if (!ftx.isActiva() && ftx.getPosicio() > 100 && ftx.getJugador().equals(jugador)) {
+                    System.out.println("Ficha " + ftx.getId() + " - Ha llegado a casa!");
+                }
+            }
+
+            System.out.println(); // Línea en blanco para separar la información de cada jugador
+        }
+
+        System.out.println("--------------------------------------------------");
+    }
+
+    // Si devuelve null no ha ganado nadie
+    public Jugador victoria() {
+
+        for (Jugador jugador : jugadoresOrdenados) {
+            int cont = 0;
+            for (Fitxes ftxs : jugador.getFitxes()) {
+                if (!ftxs.isActiva() && ftxs.getPosicio() > 100) {
+                    cont++;
+                }
+                if (cont == 4) {
+                    return ftxs.getJugador();
+                }
+            }
+        }
+
+        return null;
+    }
+
+    private Casillas accederTablero(int pos) {
+
+        // System.out.println(((pos - 1 + 68) % 68) +  " "  + tablero[(pos - 1 + 68) % 68]);     
+        return tablero[(pos - 1 + tablero.length) % tablero.length];
+    }
+
 }
