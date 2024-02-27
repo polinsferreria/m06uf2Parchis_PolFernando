@@ -136,8 +136,7 @@ public class Jugador implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Jugador{" + "id=" + id + ", nom=" + nom + ", color=" + color + ", victories=" + victories + ", fitxes="
-				+ fitxes + ", partidesGuanyades=" + partidesGuanyades + '}';
+		return "Jugador{" + "id=" + id + ", nom=" + nom + ", color=" + color + ", victories=" + victories + ", partidesGuanyades=" + partidesGuanyades + '}';
 	}
 
 }

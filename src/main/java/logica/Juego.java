@@ -54,7 +54,7 @@ public class Juego {
         ArrayList<Integer> resultados = new ArrayList<>();
 
         // Lanzar los dados para cada jugador y almacenar los resultados
-        for (Jugador jugador : jugadores) {          
+        for (Jugador jugador : jugadores) {
             System.out.println("El jugador " + jugador.getNom() + " tira los dados...");
             Dado dado = new Dado();
             ArrayList<Integer> res = dado.getResultado();
@@ -90,11 +90,11 @@ public class Juego {
             for (int j = 0; j < jugadoresOrdenados[i].getFitxes().size(); j++) {
                 if (jugadoresOrdenados[i].getFitxes().get(j).getPartida().getIdPartida() == partida.getIdPartida()) {
                     fitxesPartida[cont] = jugadoresOrdenados[i].getFitxes().get(j);
-                    fitxesPartida[i].setPosicio(0);                   
+                    fitxesPartida[i].setPosicio(0);
                     cont++;
                 }
             }
-        }      
+        }
     }
 
     public void tirarDado(Jugador jugador, int cont) {// el cont es para saber cuantas veces tira
@@ -127,24 +127,29 @@ public class Juego {
             tirarDado(jugador, ++cont);
             return;
 
-        // SI ES LA 3ª VEZ QUE SALEN SE ELIMINA LA FICHA QUE EL ESCOJA
+            // SI ES LA 3ª VEZ QUE SALEN SE ELIMINA LA FICHA QUE EL ESCOJA
         } else if (resultado.get(0) == resultado.get(1)) {
             System.out.println("Lastima perdiste una ficha... ");
             eliminarFicha(elegirFicha(jugador, "Eliminar"));
             return;
         }
-        
+
         //SI NO SE CUMPLE LOS IF ANTERIORES LLEGA AQUI
         moverFitxa(jugador, resultado.get(0) + resultado.get(1), tablero);
     }
-   
 
     public boolean Sacarficha(Jugador jugador) {
 
+        boolean eliminar = false;
+        ArrayList<Fitxes> ftxs = null;
+
         // EN CASO DE QUE ESTE BLOQUEADA LA CASILLA NO PUEDE SACAR
-        if (tablero[getCasillaEntrada(jugador) - 1 % 67].getBloqueado() == Casillas.KEY_BLOQUEADO) {
-            System.out.println("La casilla de salida esta bloqueado.");
-            return false;
+        if (tablero[getCasillaSalida(jugador) - 1 % 67].getBloqueado() == Casillas.KEY_BLOQUEADO) {
+            ftxs = hayFichasSalidaDiferenteColor(jugador);
+            if (ftxs.isEmpty()) {
+                return false;
+            }
+            eliminar = true;
         }
 
         // SE IMPRIME LA INFO DE LA PARTIDA
@@ -157,14 +162,45 @@ public class Juego {
             if (res.equals("Si")) {
                 // EN CASO DE SI BUSCAMOS LA PRIMERA FICHA NO ACTIVA QUE TENGA POSICION 0 (SI LA TIENEN DIFERENTE ES QUE HABRAN GANADO)
                 for (Fitxes fitxa : jugador.getFitxes()) {
-                    if (!fitxa.isActiva() && fitxa.getPosicio() == 0) {                       
+                    if (!fitxa.isActiva() && fitxa.getPosicio() == 0) {
                         fitxa.setPosicio(getCasillaSalida(jugador));
                         fitxa.setActiva(true);
+
+                        if (eliminar) {
+                            String fichasActivas = "";
+                            int cont = 0;
+
+                            for (Fitxes ftx : ftxs) {
+                                cont++;
+                                fichasActivas += cont + "[" + ftx.getPosicio() + "] del " + ftx.getJugador().getNom();
+                            }
+                            
+                            int opcion;
+                            System.out.println("Elige que ficha quieres eliminar: " + fichasActivas);
+                            do {
+                                System.out.print("Seleccione el numero de la ficha que desea eliminar : ");
+                                if (sc.hasNextInt()) {
+                                    opcion = sc.nextInt();
+
+                                    if (opcion < 1 || opcion > cont) {
+                                        System.err.println("Error: Seleccione un nÃƒÂºmero vÃƒÂ¡lido.");
+                                    } else {
+
+                                        break; // Salir del bucle si la entrada es v?lida
+                                    }
+                                } else {
+                                    System.err.println("Error: Ingrese un n?mero entero.");
+
+                                }
+                                sc.next(); // Limpiar el buffer de entrada
+                            } while (true);
+                            eliminarFicha(ftxs.get(opcion - 1));                            
+                        }
                         // SE BLOQUEA LA CASILLA SI ENCUENTRA UNA FICHA
                         if (hayficha(fitxa) != null) {
                             tablero[getCasillaSalida(jugador) - 1 % 67].setBloqueado(Casillas.KEY_BLOQUEADO);
                         }
-                       // System.out.println(fitxa.getId() + " " + fitxa.getJugador().getNom() + " " + fitxa.isActiva());
+                        // System.out.println(fitxa.getId() + " " + fitxa.getJugador().getNom() + " " + fitxa.isActiva());
                         return true;
                     }
                 }
@@ -187,7 +223,7 @@ public class Juego {
 
     public void moverFitxa(Jugador jugador, int numAvances, Casillas[] tablero) {
         Fitxes f = elegirFicha(jugador, " mover ");
-       // System.out.println("");
+        // System.out.println("");
         Fitxes f2 = null;
         // System.out.println(f);
         if (f != null) {
@@ -199,7 +235,7 @@ public class Juego {
                 desbloquearCasilla(f, tablero);
             }
 
-            int posTableroCasa = Casillas.CASILLAS_CASA[jugador.getColorInt()];           
+            int posTableroCasa = Casillas.CASILLAS_CASA[jugador.getColorInt()];
             int avances = 1;
 
             for (int i = 1; i <= numAvances; i++) {
@@ -298,6 +334,10 @@ public class Juego {
         return f.getJugador().getColor().equals(f2.getJugador().getColor());
     }
 
+    private boolean hayfichaColor(String color, Fitxes f2) {
+        return color.equals(f2.getJugador().getColor());
+    }
+
     private Fitxes hayficha(Fitxes f) {
 
         for (int i = 0; i < fitxesPartida.length; i++) {
@@ -306,6 +346,18 @@ public class Juego {
             }
         }
         return null;
+    }
+
+    private ArrayList<Fitxes> hayFichasSalidaDiferenteColor(Jugador jugador) {
+
+        ArrayList<Fitxes> ftxs = new ArrayList<>();
+
+        for (Fitxes f : fitxesPartida) {
+            if (f.getPosicio() == getCasillaSalida(jugador) && !f.getJugador().getColor().equals(jugador.getColor())) {
+                ftxs.add(f);
+            }
+        }
+        return ftxs;
     }
 
     private boolean bloqueoCasa(Jugador j, int pos) {
@@ -379,9 +431,9 @@ public class Juego {
                 contador++;
                 if (ficha.getPosicio() == 0) {
                     fichasActivas += contador + " [" + getCasillaSalida(ficha.getJugador()) + "] ";
-                } else if (ficha.getPosicio() > 68){
-                     fichasActivas += contador + " [c" + (ficha.getPosicio() - Casillas.CASILLAS_CASA[jugador.getColorInt()]) + "] ";
-                }else{
+                } else if (ficha.getPosicio() > 68) {
+                    fichasActivas += contador + " [c" + (ficha.getPosicio() - Casillas.CASILLAS_CASA[jugador.getColorInt()]) + "] ";
+                } else {
                     fichasActivas += contador + " [" + ficha.getPosicio() + "] ";
                 }
 
@@ -450,7 +502,7 @@ public class Juego {
             for (Fitxes ftx : fitxesPartida) {
                 if (ftx.isActiva() && ftx.getJugador().equals(jugador)) {
                     if (ftx.getPosicio() < 68) {
-                        System.out.println("Ficha " + ftx.getId() + " - Posición: " + ftx.getPosicio() + " - Casilla " + tablero[(ftx.getPosicio() - 1) % 67].getTipoCasilla());
+                        System.out.println("Ficha " + ftx.getId() + " - Posición: " + ftx.getPosicio() + " - Casilla " + tablero[(ftx.getPosicio() - 1) % 67].getTipoCasilla());               
                     } else {
                         System.out.println("Ficha " + ftx.getId() + " - Posición: c" + (ftx.getPosicio() - Casillas.CASILLAS_CASA[jugador.getColorInt()]) + " - Casilla Casa");
                     }
