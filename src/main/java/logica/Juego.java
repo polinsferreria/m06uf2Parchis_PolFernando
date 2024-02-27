@@ -129,7 +129,7 @@ public class Juego {
         // SI SALEN DOBLES, MUEBE LA FICHA Y VUELVE A TIRAR
         if ((resultado.get(0) == resultado.get(1)) && cont < 3) {
             System.out.println("Felices salieron dobles es la " + cont + "ª vez  consecutiva");
-            moverFitxa(jugador, resultado.get(0) + resultado.get(1), tablero);
+            fDAO.saveOrUpdate(moverFitxa(jugador, resultado.get(0) + resultado.get(1), tablero)); 
             tirarDado(jugador, ++cont);
             return;
 
@@ -141,7 +141,7 @@ public class Juego {
         }
 
         //SI NO SE CUMPLE LOS IF ANTERIORES LLEGA AQUI
-        moverFitxa(jugador, resultado.get(0) + resultado.get(1), tablero);
+        fDAO.saveOrUpdate(moverFitxa(jugador, resultado.get(0) + resultado.get(1), tablero));
     }
 
     public boolean Sacarficha(Jugador jugador) {
@@ -187,7 +187,7 @@ public class Juego {
         return CE == 0 ? 68 : CE;
     }
 
-    public void moverFitxa(Jugador jugador, int numAvances, Casillas[] tablero) {
+    public Fitxes moverFitxa(Jugador jugador, int numAvances, Casillas[] tablero) {
         Fitxes f = elegirFicha(jugador, " mover ");
         // System.out.println("");
         Fitxes f2 = null;
@@ -242,7 +242,7 @@ public class Juego {
                 if (f.getPosicio() == (posTableroCasa + 8)) {
                     f.setActiva(false);
                 }
-                return;
+                return f;
             }
 
             f2 = hayficha(f);
@@ -250,7 +250,7 @@ public class Juego {
                 if (f2 != null) {// casilla segura con una ficha = a bloqueo
                     accederTablero(f.getPosicio()).setBloqueado(Casillas.KEY_BLOQUEADO);
                 }
-                return;
+                return f;
             } else {
                 if (f2 != null) {
                     if (hayfichaColor(f, f2)) {
@@ -260,9 +260,11 @@ public class Juego {
                     }
                 }
             }
+            
         }
         // si hay una ficha de un mismo color en una casilla no salvens pues se bloquea
         // tambien; asi q else{hayFichaColor()}
+		return f;
     }
 
     private boolean hayfichaColor(Fitxes f, Fitxes f2) {
@@ -401,8 +403,10 @@ public class Juego {
     }
 
     public void eliminarFicha(Fitxes fitxe) {
+    	
         fitxe.setActiva(false);
         fitxe.setPosicio(0);
+        fDAO.saveOrUpdate(fitxe);
         System.out.println("Ficha eliminada con ?xito.");
     }
 
