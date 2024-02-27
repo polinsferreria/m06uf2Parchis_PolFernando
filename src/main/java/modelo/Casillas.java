@@ -102,7 +102,7 @@ public class Casillas {
             } else if (i == CASILLAS_SALIDA[cont]) {
                 //String color = Jugador.COLORES[cont];
                 tipo = STR_TIPO_SEGURA;
-                //cont++;
+                cont++;
             }
 
             Casillas aux = new Casillas(i, tipo, i);
