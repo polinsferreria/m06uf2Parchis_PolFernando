@@ -14,13 +14,18 @@ import modelo.Dado;
 import modelo.Fitxes;
 import modelo.Jugador;
 import modelo.Partides;
+import pkg_DAO.FitxesDAO;
+import pkg_DAO.JugadorDAO;
+import pkg_DAO.PartidesDAO;
 
 /**
  *
  * @author usuario
  */
 public class Juego {
-
+	public static PartidesDAO pDAO = new PartidesDAO();
+	public static JugadorDAO jDAO = new JugadorDAO();
+	public static FitxesDAO fDAO = new FitxesDAO();
     private Scanner sc;
     private Partides partida;
     private Casillas[] tablero;

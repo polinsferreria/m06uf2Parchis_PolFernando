@@ -86,7 +86,7 @@ public class Jugador implements Serializable {
 	}
 
 	public List<Fitxes> getFitxes() {
-		return (ArrayList <Fitxes>) fitxes;
+		return fitxes;
 	}
 
 	public void setFitxes(ArrayList<Fitxes> fitxes) {

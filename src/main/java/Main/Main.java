@@ -10,6 +10,7 @@ import logica.Juego;
 import modelo.Jugador;
 import modelo.Partides;
 import pkg_DAO.DAOGeneric;
+import pkg_DAO.JugadorDAO;
 import pkg_DAO.PartidesDAO;
 import pkg_DAO.Utils;
 
@@ -51,9 +52,16 @@ public class Main {
     		if(jugaores4.size() == 4) {
     			
     			Partides p = new Partides();
-    			PartidesDAO j = new PartidesDAO();
-    			j.saveOrUpdate(p);
-    			System.out.println("fin");
+    			/*Juego.pDAO.saveOrUpdate(p);
+    			
+    			p.setEnCurso(false);
+    			p.setFechaFin(Partides.DateAString(new Date()));
+    			Juego.jDAO.saveOrUpdate(a2);
+    			p.setGanador(a2);
+    			
+    			Juego.pDAO.saveOrUpdate(p);
+    			
+    			System.out.println("fin");*/
     			
     			new Juego(p,jugaores4);
     			
