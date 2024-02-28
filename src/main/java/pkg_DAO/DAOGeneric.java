@@ -3,6 +3,8 @@ package pkg_DAO;
 import java.io.Serializable;
 import java.util.List;
 
+import javax.persistence.TypedQuery;
+
 import org.hibernate.SessionFactory;
 import java.lang.reflect.ParameterizedType;
 
@@ -106,12 +108,14 @@ public class DAOGeneric<T, ID extends Serializable> implements IDAOGeneric<T, ID
     }
 
     public List list() {
-        Session session = sessionFactory.getCurrentSession();
+        Session session = sessionFactory.openSession();
+        
         // TODO Auto-generated method stubSession session = sessionFactory.getCurrentSession();
         try {
-
-            List<T> entities = session.createQuery("SELECT e FROM " + getEntityClass().getName() + " e").list();
+            List<T> entities = session.createQuery("FROM " + getEntityClass().getName(), getEntityClass()).list();
+            session.close();
             return entities;
+            
         } catch (HibernateException e) {
             e.printStackTrace();
             if (session != null && session.getTransaction() != null) {

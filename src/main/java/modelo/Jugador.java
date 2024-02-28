@@ -31,7 +31,26 @@ public class Jugador implements Serializable {
     @OneToMany(mappedBy = "ganador", cascade = CascadeType.ALL)
     private List<Partides> partidesGuanyades;
 
-    public Jugador(String nom, String color) {
+    public Jugador() {
+        // Constructor sin argumentos requerido por Hibernate
+        inicializarFitxes();  // Puedes inicializar aquí las listas u otras configuraciones si es necesario
+    }
+    
+    public Jugador(int id, String nom, String color, int victories, List<Fitxes> fitxes,
+            List<Partides> partidesGuanyades) {
+        super();
+        this.id = id;
+        this.nom = nom;
+        this.color = color;
+        this.victories = victories;
+
+        // Inicializar las listas si son nulas
+        this.fitxes = (fitxes != null) ? fitxes : new ArrayList<>();
+        this.partidesGuanyades = (partidesGuanyades != null) ? partidesGuanyades : new ArrayList<>();
+        
+    }
+
+	public Jugador(String nom, String color) {
         super();
         this.nom = nom;
         this.color = color;
