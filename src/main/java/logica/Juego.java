@@ -125,7 +125,7 @@ public class Juego {
         System.out.println("Jugador " + jugador.getNom() + " tira Dados...");
         sc.nextLine();
 
-        Dado d = new Dado();    
+        Dado d = new Dado();
         ArrayList<Integer> resultado = d.getResultado();
         System.out.println("Ha sacado un " + resultado.get(0) + " y un " + resultado.get(1));
 
@@ -210,12 +210,13 @@ public class Juego {
         Fitxes f2 = null;
         // System.out.println(f);
         if (f != null) {
-            boolean enTableroCasa = f.getPosicio() > 69;
+            boolean enTableroCasa = f.getPosicio() > 68;
             boolean retroceso = false;
 
             if (!enTableroCasa) {
                 desbloquearCasilla(f, tablero);
             }
+
             int posTableroCasa = Casillas.CASILLAS_CASA[jugador.getColorInt()];
             int avances = 1;
 
@@ -228,7 +229,9 @@ public class Juego {
                         retroceso = true;
                         avances = -1;
                     }
-                    if (f.getPosicio() == posTableroCasa) {
+
+                    if (f.getPosicio() == posTableroCasa && retroceso) {
+
                         if (accederTablero(getCasillaEntrada(jugador)).getBloqueado() == Casillas.KEY_BLOQUEADO) {
                             break;
                         } else {
@@ -241,17 +244,19 @@ public class Juego {
                         f.setPosicio(f.getPosicio() + avances);
                     }
                     continue;
-                }
+                } 
 
                 if (accederTablero(f.getPosicio() + 1).getBloqueado() == Casillas.KEY_BLOQUEADO) {
                     break;
                 } else {
                     if (accederTablero(f.getPosicio()).getPosicion() == getCasillaEntrada(jugador)) {
                         enTableroCasa = true;
+                        System.out.println(getCasillaEntrada(jugador));
                         f.setPosicio(posTableroCasa);
+                    } else{
+                        f.setPosicio((f.getPosicio() + avances)% 68);
                     }
-
-                    f.setPosicio(f.getPosicio() + avances);
+                    
                 }
             }
 
@@ -275,10 +280,8 @@ public class Juego {
                     } else {// eliminar f2
                         eliminarFicha(f2);
                     }
-
                 }
             }
-
         }
         // si hay una ficha de un mismo color en una casilla no salvens pues se bloquea
         // tambien; asi q else{hayFichaColor()}

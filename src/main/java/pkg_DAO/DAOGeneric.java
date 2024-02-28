@@ -119,7 +119,7 @@ public class DAOGeneric<T, ID extends Serializable> implements IDAOGeneric<T, ID
         // TODO Auto-generated method stubSession session = sessionFactory.getCurrentSession();
         try {
 
-            List<T> entities = session.createQuery("SELECT e FROM " + getEntityClass().getName() + " e").list();
+            List<T> entities = session.createQuery("FROM " + getEntityClass().getName(),  getEntityClass()).list();
             return entities;
         } catch (HibernateException e) {
             e.printStackTrace();
