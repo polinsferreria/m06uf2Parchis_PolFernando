@@ -33,7 +33,7 @@ public class Main {
             jugadores.add(a2);
             jugadores.add(a3);
             jugadores.add(a4);
-
+            
             jugadores.add(b1);
             jugadores.add(b2);
             jugadores.add(b3);
