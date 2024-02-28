@@ -1,9 +1,6 @@
 package pkg_DAO;
 
-import java.util.List;
-
 import modelo.Jugador;
-import modelo.Partides;
 
 public class JugadorDAO extends DAOGeneric<Jugador, Integer> implements IJugadorDAO{
 

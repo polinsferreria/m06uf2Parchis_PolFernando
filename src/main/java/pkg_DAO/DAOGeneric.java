@@ -3,20 +3,13 @@ package pkg_DAO;
 import java.io.Serializable;
 import java.util.List;
 
+import javax.persistence.TypedQuery;
+
 import org.hibernate.SessionFactory;
-
-import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
-import java.util.List;
-
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
 
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.query.Query;
 
 public class DAOGeneric<T, ID extends Serializable> implements IDAOGeneric<T, ID> {
 
@@ -115,14 +108,15 @@ public class DAOGeneric<T, ID extends Serializable> implements IDAOGeneric<T, ID
     }
 
     public List list() {
-        Session session = sessionFactory.getCurrentSession();
+        Session session = sessionFactory.openSession();
+
         // TODO Auto-generated method stubSession session = sessionFactory.getCurrentSession();
         try {
-
-            List<T> entities = session.createQuery("FROM " + getEntityClass().getName(),  getEntityClass()).list();
+            List<T> entities = session.createQuery("FROM " + getEntityClass().getName(), getEntityClass()).list();
             return entities;
+
         } catch (HibernateException e) {
-            e.printStackTrace();
+
             if (session != null && session.getTransaction() != null) {
                 System.out.println("\n.......Transaction Is Being Rolled Back.......");
                 session.getTransaction().rollback();

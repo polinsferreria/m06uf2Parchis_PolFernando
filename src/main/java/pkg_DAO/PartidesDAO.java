@@ -1,7 +1,5 @@
 package pkg_DAO;
 
-import java.util.List;
-
 import modelo.Partides;
 
 public class PartidesDAO extends DAOGeneric<Partides, Integer> implements IPartidesDAO {

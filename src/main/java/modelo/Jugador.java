@@ -3,15 +3,7 @@ package modelo;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "JUGADOR")
@@ -39,7 +31,26 @@ public class Jugador implements Serializable {
     @OneToMany(mappedBy = "ganador", cascade = CascadeType.ALL)
     private List<Partides> partidesGuanyades;
 
-    public Jugador(String nom, String color) {
+    public Jugador() {
+        // Constructor sin argumentos requerido por Hibernate
+        inicializarFitxes();  // Puedes inicializar aquí las listas u otras configuraciones si es necesario
+    }
+    
+    public Jugador(int id, String nom, String color, int victories, List<Fitxes> fitxes,
+            List<Partides> partidesGuanyades) {
+        super();
+        this.id = id;
+        this.nom = nom;
+        this.color = color;
+        this.victories = victories;
+
+        // Inicializar las listas si son nulas
+        this.fitxes = (fitxes != null) ? fitxes : new ArrayList<>();
+        this.partidesGuanyades = (partidesGuanyades != null) ? partidesGuanyades : new ArrayList<>();
+        
+    }
+
+	public Jugador(String nom, String color) {
         super();
         this.nom = nom;
         this.color = color;
