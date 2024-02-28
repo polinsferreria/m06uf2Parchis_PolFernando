@@ -24,8 +24,7 @@ public class DAOGeneric<T, ID extends Serializable> implements IDAOGeneric<T, ID
     @Override
     public void saveOrUpdate(T entity) {
         // TODO Auto-generated method stub
-
-        Session session = sessionFactory.getCurrentSession();
+    	Session session = sessionFactory.openSession();
         try {
             session.beginTransaction();
             session.saveOrUpdate(entity);

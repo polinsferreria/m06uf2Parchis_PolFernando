@@ -388,11 +388,11 @@ public class Juego {
             System.out.print("Seleccione el numero de la ficha que desea" + accion + ": ");
             if (sc.hasNextInt()) {
                 opcion = sc.nextInt();
-
+                
                 if (opcion < 1 || opcion > contador) {
                     System.err.println("Error: Seleccione un numero valido.");
                 } else {
-
+                	
                     break; // Salir del bucle si la entrada es v?lida
                 }
             } else {
@@ -401,7 +401,7 @@ public class Juego {
             }
             sc.next(); // Limpiar el buffer de entrada
         } while (true);
-
+        
         int fichaSeleccionada = 0;
         for (Fitxes ficha : fitxes) {
             if (ficha.isActiva() || ficha.getPosicio() != 0) {
