@@ -7,14 +7,9 @@ package logica;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
-import java.util.Objects;
 import java.util.Scanner;
 
-import modelo.Casillas;
-import modelo.Dado;
-import modelo.Fitxes;
-import modelo.Jugador;
-import modelo.Partides;
+import modelo.*;
 import pkg_DAO.*;
 
 /**

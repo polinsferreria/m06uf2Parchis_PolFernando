@@ -1,20 +1,10 @@
 package Main;
 
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
 
-import com.mysql.cj.xdevapi.SessionFactory;
-
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import logica.Juego;
 import modelo.Jugador;
 import modelo.Partides;
-import pkg_DAO.DAOGeneric;
-import pkg_DAO.JugadorDAO;
-import pkg_DAO.PartidesDAO;
-import pkg_DAO.Utils;
 
 public class Main {
 
