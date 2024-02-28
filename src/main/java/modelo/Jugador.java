@@ -28,9 +28,9 @@ public class Jugador implements Serializable {
     @OneToMany(mappedBy = "jugador", cascade = CascadeType.ALL)
     private List<Fitxes> fitxes;
 
-    @OneToMany(mappedBy = "ganador", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "ganador", cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     private List<Partides> partidesGuanyades;
-
+    
     public Jugador() {
         // Constructor sin argumentos requerido por Hibernate
         inicializarFitxes();  // Puedes inicializar aquí las listas u otras configuraciones si es necesario
@@ -54,7 +54,8 @@ public class Jugador implements Serializable {
         super();
         this.nom = nom;
         this.color = color;
-
+        this.fitxes = (fitxes != null) ? fitxes : new ArrayList<>();
+        this.partidesGuanyades = (partidesGuanyades != null) ? partidesGuanyades : new ArrayList<>();
         inicializarFitxes();
     }
 
@@ -92,7 +93,7 @@ public class Jugador implements Serializable {
     }
 
     public void setVictories() {
-        this.victories = getPartidesGuanyades().size();
+    	this.victories = (partidesGuanyades != null) ? partidesGuanyades.size() : 0;
     }
 
     public List<Fitxes> getFitxes() {
@@ -141,7 +142,7 @@ public class Jugador implements Serializable {
     }
     @Override
     public String toString() {
-        return "Jugador{" + "id=" + id + ", nom=" + nom + ", color=" + color + ", victories=" + victories + ", partidesGuanyades=" + partidesGuanyades + '}';
+        return "Jugador{" + "id=" + id + ", nom=" + nom + ", color=" + color  + '}';
     }
 
 }

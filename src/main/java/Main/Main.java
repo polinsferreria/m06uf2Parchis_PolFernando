@@ -2,6 +2,8 @@ package Main;
 
 
 import java.util.ArrayList;
+import java.util.Date;
+
 import logica.Juego;
 import modelo.Jugador;
 import modelo.Partides;
@@ -49,10 +51,18 @@ public class Main {
     		jugaores4.add(jugadores.get(i));
     		Juego.jDAO.saveOrUpdate(jugadores.get(i));// GUARDAR JUGADORES EN LA BASE DE DATOS 
     		if(jugaores4.size() == 4) {
-    			
+    			Jugador ganador =jugaores4.get(1); 
     			Partides p = new Partides();
-    			Juego.pDAO.saveOrUpdate(p);
+    			Juego.pDAO.saveOrUpdate(p);/*
     			
+    			p.setFechaFin(Partides.DateAString(new Date()));
+                p.setEnCurso(false);
+                p.setGanador(ganador);
+                ganador.getPartidesGuanyades().add(p);
+                ganador.setVictories();
+                Juego.pDAO.saveOrUpdate(p);
+                Juego.jDAO.saveOrUpdate(ganador);*/
+                
     			new Juego(p,jugaores4);
     			
     			jugaores4 = new ArrayList<Jugador>();

@@ -43,7 +43,22 @@ public class Juego {
         do {
             for (int i = 0; i < jugadoresOrdenados.length; i++) {
                 if (jugadoresOrdenados[i] != null) {
+                	Jugador ganador = victoria();
+                    
+                    if (ganador != null) {
+                        // FINALIZO LA PARTIDA
+                        partida.setFechaFin(Partides.DateAString(new Date()));
+                        partida.setEnCurso(false);
+                        partida.setGanador(ganador);
+                        ganador.getPartidesGuanyades().add(partida);
+                        ganador.setVictories();
+                        pDAO.saveOrUpdate(partida);
+                        jDAO.saveOrUpdate(ganador);
+                        System.out.println("Partida finalizada el ganador ha sido " + ganador.getNom());
+                        return;
+                    }
                     tirarDado(jugadoresOrdenados[i], 1);
+                    
                 }
             }
         } while (partida.isEnCurso());
@@ -101,21 +116,7 @@ public class Juego {
     }
 
     public void tirarDado(Jugador jugador, int cont) {// el cont es para saber cuantas veces tira
-
-        Jugador ganador = victoria();
-        Fitxes f;
-        if (ganador != null) {
-            // FINALIZO LA PARTIDA
-            partida.setFechaFin(Partides.DateAString(new Date()));
-            partida.setEnCurso(false);
-            partida.setGanador(ganador);
-            ganador.getPartidesGuanyades().add(partida);
-            ganador.setVictories();
-            pDAO.saveOrUpdate(partida);
-            jDAO.saveOrUpdate(ganador);
-            System.out.println("Partida finalizada el ganador ha sido " + ganador.getNom());
-            return;
-        }
+    	Fitxes f;
 
         System.out.println("Jugador " + jugador.getNom() + " tira Dados...");
         sc.nextLine();
